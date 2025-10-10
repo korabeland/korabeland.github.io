@@ -1,0 +1,135 @@
+# Portfolio Site - Git Ignore Configuration
+
+# ===== PROJECT DIRECTORIES (KEEP PRIVATE - KEYPATH IP) =====
+# Entire project directories with code, specs, and data
+Forecasting/
+Lead-Scoring/
+
+# ===== INTERNAL DOCUMENTATION (KEEP PRIVATE) =====
+CLAUDE.md
+code_review_log.md
+todo.md
+
+# ===== DATA FILES =====
+# Extra safety: exclude CSV files if they exist outside project dirs
+*.csv
+
+# Exclude Excel files (often contain sensitive data)
+*.xlsx
+*.xls
+!**/example*.xlsx
+!**/template*.xlsx
+
+# ===== PYTHON =====
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ===== ENVIRONMENT & CONFIG =====
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ===== MODEL ARTIFACTS =====
+# Trained model files (can be large)
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# ===== OUTPUTS & TEMPORARY FILES =====
+# Output directories with generated files
+outputs/
+temp/
+tmp/
+
+# Log files
+*.log
+
+# ===== KEEP DOCUMENTATION =====
+# Documentation files should be included
+!*.md
+!*.MD
+!CLAUDE.md
+!README.md
+
+# Keep Jupyter notebooks for demonstration
+!*.ipynb
+
+# Keep Python scripts
+!*.py
+
+# ===== SYSTEM FILES =====
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ===== GOOGLE DRIVE SPECIFIC =====
+# Google Drive Desktop files
+*.gdoc
+*.gsheet
+*.gslides
+.tmp.driveupload/
+.tmp.drivedownload/
+
+# ===== PROJECT SPECIFIC =====
+# Archive folders
+Old/
+Archive/
+archive/
+
+# Backup files
+*.bak
+*.backup
+
+# Test data
+test_data/
+sample_data/
+!tests/sample_data/
+
+# Compressed files
+*.zip
+*.tar.gz
+*.rar
+
+# Screenshots (optional - keep if they're documentation)
+# Uncomment to exclude:
+# *.png
+# *.jpg
+# *.jpeg
