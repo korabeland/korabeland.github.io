@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{PROMPT_TITLE} - Prompt Library</title>
+    <meta name="description" content="{USE_CASE_DESCRIPTION}">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Header (consistent with site) -->
+    <header class="site-header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="../../index.html">Korab Eland</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="../../index.html#about">About</a></li>
+                <li><a href="../../index.html#projects">Projects</a></li>
+                <li><a href="../../prompt-library.html">Prompt Library</a></li>
+                <li><a href="../../index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb container">
+            <a href="../../prompt-library.html">Prompt Library</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="../categories/{CATEGORY}.html">{CATEGORY_DISPLAY_NAME}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{PROMPT_TITLE}</span>
+        </nav>
+
+        <!-- Detail Header -->
+        <section class="prompt-detail-header">
+            <div class="container">
+                <h1>{PROMPT_TITLE}</h1>
+                <span class="prompt-type-indicator">[{TYPE: Template|Methodology}]</span>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section class="prompt-content">
+            <div class="container">
+                {GUIDE_CONTENT_CONVERTED_TO_HTML}
+                <!--
+                    Expected content sections:
+                    1. What is this prompt? (H2 section explaining purpose)
+                    2. When/why to use it (H2 section with use cases)
+
+                    For prompts with full guides:
+                    - Extract content from {prompt}-guide.md
+                    - Convert markdown to HTML
+
+                    For prompts without guides:
+                    - Write brief 100-200 word description
+                    - Follow "What" + "When/Why" structure
+                -->
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section class="download-section">
+            <div class="container">
+                <h2>Get This Prompt</h2>
+                <p>Download and use this prompt in your own work:</p>
+                <div class="download-options">
+                    <a href="../../downloads/{CATEGORY}/{PROMPT_FILE}.md" class="download-button" download>
+                        ⬇️ Download {PROMPT_FILE}.md
+                    </a>
+                    <a href="https://raw.githubusercontent.com/korabeland/korabeland.github.io/main/Prompt%20Library/{GITHUB_PATH}/{PROMPT_FILE}.md" class="github-link" target="_blank" rel="noopener noreferrer">
+                        👀 View on GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Back Navigation -->
+        <nav class="prompt-navigation">
+            <div class="container">
+                <a href="../categories/{CATEGORY}.html" class="back-link">
+                    ← Back to {CATEGORY_DISPLAY_NAME}
+                </a>
+                <a href="../../prompt-library.html" class="back-link">
+                    ← Back to Prompt Library
+                </a>
+                <a href="../../index.html" class="back-link">
+                    ← Home
+                </a>
+            </div>
+        </nav>
+    </main>
+
+    <!-- Footer (consistent with site) -->
+    <footer class="site-footer">
+        <p>&copy; 2025 Korab Eland. Built with <a href="https://claude.com/claude-code">Claude Code</a>.</p>
+    </footer>
+</body>
+</html>
