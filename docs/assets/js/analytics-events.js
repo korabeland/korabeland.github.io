@@ -66,15 +66,66 @@
         return (text || "").replace(/\s+/g, " ").trim().slice(0, 100);
     }
 
-    function fireEvent(name, params) {
+    function fireEvent(name, params, callback) {
         var payload = Object.assign(
             {
                 page_type: pageType,
-                page_path: path
+                page_path: path,
+                transport_type: "beacon"
             },
             params || {}
         );
+        if (typeof callback === "function") {
+            payload.event_callback = callback;
+        }
         window.gtag("event", name, payload);
+    }
+
+    function shouldDelayNavigation(link, event) {
+        if (!link || !event) {
+            return false;
+        }
+        if (event.defaultPrevented || event.button !== 0) {
+            return false;
+        }
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return false;
+        }
+        var target = (link.getAttribute("target") || "").toLowerCase();
+        if (target && target !== "_self") {
+            return false;
+        }
+        return true;
+    }
+
+    function followLink(rawHref, resolvedUrl) {
+        if (/^mailto:/i.test(rawHref)) {
+            window.location.href = rawHref;
+            return;
+        }
+        if (resolvedUrl && resolvedUrl.href) {
+            window.location.href = resolvedUrl.href;
+        }
+    }
+
+    function trackClickAndNavigate(eventName, params, event, link, rawHref, resolvedUrl) {
+        if (!shouldDelayNavigation(link, event)) {
+            fireEvent(eventName, params);
+            return;
+        }
+
+        var navigated = false;
+        var navigate = function () {
+            if (navigated) {
+                return;
+            }
+            navigated = true;
+            followLink(rawHref, resolvedUrl);
+        };
+
+        event.preventDefault();
+        fireEvent(eventName, params, navigate);
+        window.setTimeout(navigate, 300);
     }
 
     function trackProjectSession() {
@@ -185,54 +236,54 @@
                 var fileName = fileNameMatch ? fileNameMatch[1] : "";
 
                 if (/^mailto:/i.test(href)) {
-                    fireEvent("contact_click", {
+                    trackClickAndNavigate("contact_click", {
                         contact_method: "email",
                         cta_location: ctaLocation,
                         link_text: text
-                    });
+                    }, event, link, href, resolvedUrl);
                     return;
                 }
 
                 if (hostname.indexOf("linkedin.com") !== -1) {
-                    fireEvent("linkedin_click", {
+                    trackClickAndNavigate("linkedin_click", {
                         cta_location: ctaLocation,
                         link_text: text
-                    });
+                    }, event, link, href, resolvedUrl);
                     return;
                 }
 
                 if (hostname.indexOf("github.com") !== -1) {
-                    fireEvent("github_click", {
+                    trackClickAndNavigate("github_click", {
                         cta_location: ctaLocation,
                         link_text: text
-                    });
+                    }, event, link, href, resolvedUrl);
                     return;
                 }
 
                 if (/resume/i.test(fileName) && /^(pdf|doc|docx)$/i.test(fileExt)) {
-                    fireEvent("resume_download", {
+                    trackClickAndNavigate("resume_download", {
                         cta_location: ctaLocation,
                         file_name: fileName,
                         file_type: fileExt
-                    });
+                    }, event, link, href, resolvedUrl);
                     return;
                 }
 
                 if (/\/projects\/[^/]+\.html$/i.test(pathname)) {
-                    fireEvent("project_card_click", {
+                    trackClickAndNavigate("project_card_click", {
                         cta_location: ctaLocation,
                         project_slug: getSlugFromPath(pathname),
                         link_text: text
-                    });
+                    }, event, link, href, resolvedUrl);
                     return;
                 }
 
                 if (hasDownloadAttr || /^(pdf|doc|docx|xls|xlsx|ppt|pptx|csv|md|txt)$/i.test(fileExt)) {
-                    fireEvent("artifact_open", {
+                    trackClickAndNavigate("artifact_open", {
                         cta_location: ctaLocation,
                         artifact_name: fileName || text || "unknown",
                         artifact_type: fileExt || "download"
-                    });
+                    }, event, link, href, resolvedUrl);
                 }
             },
             true
