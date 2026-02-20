@@ -426,7 +426,7 @@
             return;
         }
         fireEvent("portfolio_tracker_heartbeat", {
-            tracker_version: "20260220h"
+            tracker_version: "20260220i"
         });
     }
 
@@ -435,46 +435,37 @@
             return;
         }
 
-        // google_tag_manager is set by gtag.js when it loads and initialises.
-        // If it exists, the real GA pipeline is running and draining dataLayer.
-        var gtagLoaded = !!window.google_tag_manager;
+        // gtag.js loads with "async" so it may not have executed yet when
+        // this deferred script runs.  Show a "waiting" state initially and
+        // only render a definitive PASS/BLOCKED verdict after a delay.
+        var mid = getMeasurementId();
 
-        if (gtagLoaded) {
+        if (window.google_tag_manager) {
+            reportGtagStatus(mid, true);
+        } else {
+            addDebugLine("waiting for gtag.js ...");
+            window.setTimeout(function () {
+                reportGtagStatus(mid, !!window.google_tag_manager);
+            }, 2000);
+        }
+    }
+
+    function reportGtagStatus(mid, loaded) {
+        if (loaded) {
             addDebugLine("PASS  gtag.js loaded");
+            var containerKey = mid ? mid.replace("G-", "G") : "";
+            if (containerKey && window.google_tag_manager[containerKey]) {
+                addDebugLine("PASS  container " + mid + " active");
+            } else if (mid) {
+                addDebugLine("WARN  container " + mid + " not active yet");
+            }
         } else {
             addDebugLine("BLOCKED  gtag.js did NOT load");
             addDebugLine("  -> ad blocker or network block");
             addDebugLine("  -> events are queued but NOT sent");
         }
-
-        // Also check whether collect requests are possible by looking for
-        // the measurement-ID container that gtag.js creates.
-        var mid = getMeasurementId();
-        var containerKey = mid ? mid.replace("G-", "G") : "";
-        if (containerKey && window.google_tag_manager && window.google_tag_manager[containerKey]) {
-            addDebugLine("PASS  container " + mid + " active");
-        } else if (mid) {
-            addDebugLine("WARN  container " + mid + " not active");
-        }
-
-        // Report dataLayer queue depth — items sitting here have NOT been
-        // processed yet (or gtag.js is not loaded to consume them).
         var queueDepth = window.dataLayer ? window.dataLayer.length : 0;
         addDebugLine("dataLayer depth: " + queueDepth);
-
-        // Schedule a recheck after 3s — gtag.js loads async so it may
-        // arrive after our deferred script runs.
-        window.setTimeout(function () {
-            var loaded = !!window.google_tag_manager;
-            if (!loaded) {
-                addDebugLine("RECHECK  gtag.js still not loaded after 3s");
-                addDebugLine("  -> likely blocked by extension/network");
-            } else if (!gtagLoaded) {
-                // It wasn't loaded before but is now — late arrival.
-                addDebugLine("PASS  gtag.js arrived (late load)");
-                addDebugLine("dataLayer depth: " + (window.dataLayer ? window.dataLayer.length : 0));
-            }
-        }, 3000);
     }
 
     if (debugEnabled) {
