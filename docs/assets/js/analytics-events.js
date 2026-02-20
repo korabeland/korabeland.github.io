@@ -25,6 +25,7 @@
     }
 
     var pageType = getPageType(path);
+    var debugEnabled = /(?:\?|&)ga_debug=1(?:&|$)/.test(window.location.search || "");
 
     function getSlugFromPath(pagePath) {
         var match = pagePath.match(/\/([^/]+)\.html$/i);
@@ -75,10 +76,30 @@
             },
             params || {}
         );
+        if (debugEnabled) {
+            payload.debug_mode = true;
+        }
         if (typeof callback === "function") {
             payload.event_callback = callback;
         }
         window.gtag("event", name, payload);
+    }
+
+    function getAnchorFromEvent(event) {
+        var target = event && event.target;
+        if (!target) {
+            return null;
+        }
+
+        // In some browsers, click target may be a text node.
+        if (target.nodeType === 3 && target.parentElement) {
+            target = target.parentElement;
+        }
+
+        if (target && typeof target.closest === "function") {
+            return target.closest("a");
+        }
+        return null;
     }
 
     function shouldDelayNavigation(link, event) {
@@ -207,7 +228,7 @@
         document.addEventListener(
             "click",
             function (event) {
-                var link = event.target.closest("a");
+                var link = getAnchorFromEvent(event);
                 if (!link) {
                     return;
                 }
@@ -290,7 +311,17 @@
         );
     }
 
+    function emitDebugHeartbeat() {
+        if (!debugEnabled) {
+            return;
+        }
+        fireEvent("portfolio_tracker_heartbeat", {
+            tracker_version: "20260220c"
+        });
+    }
+
     trackProjectSession();
     trackCaseStudyReadComplete();
     trackLinkClicks();
+    emitDebugHeartbeat();
 })();
