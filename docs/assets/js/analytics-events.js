@@ -32,6 +32,58 @@
 
     var pageType = getPageType(path);
     var debugEnabled = /(?:\?|&)ga_debug=1(?:&|$)/.test(window.location.search || "");
+    var debugPanel = null;
+    var debugList = null;
+
+    function ensureDebugPanel() {
+        if (!debugEnabled || debugPanel || !document.body) {
+            return;
+        }
+        debugPanel = document.createElement("aside");
+        debugPanel.setAttribute("id", "portfolio-ga-debug");
+        debugPanel.style.cssText = [
+            "position:fixed",
+            "right:12px",
+            "bottom:12px",
+            "width:340px",
+            "max-height:45vh",
+            "overflow:auto",
+            "z-index:99999",
+            "padding:10px 12px",
+            "background:#111",
+            "color:#f5f5f5",
+            "font:12px/1.4 Consolas, monospace",
+            "border:1px solid #444",
+            "border-radius:8px",
+            "box-shadow:0 8px 24px rgba(0,0,0,.35)"
+        ].join(";");
+
+        var title = document.createElement("div");
+        title.textContent = "GA Debug";
+        title.style.cssText = "font-weight:700;margin-bottom:8px;color:#9be7ff";
+        debugPanel.appendChild(title);
+
+        debugList = document.createElement("div");
+        debugPanel.appendChild(debugList);
+        document.body.appendChild(debugPanel);
+    }
+
+    function addDebugLine(message) {
+        if (!debugEnabled) {
+            return;
+        }
+        ensureDebugPanel();
+        if (!debugList) {
+            return;
+        }
+        var line = document.createElement("div");
+        line.textContent = new Date().toLocaleTimeString() + "  " + message;
+        line.style.marginBottom = "4px";
+        debugList.appendChild(line);
+        while (debugList.childNodes.length > 24) {
+            debugList.removeChild(debugList.firstChild);
+        }
+    }
 
     function getSlugFromPath(pagePath) {
         var match = pagePath.match(/\/([^/]+)\.html$/i);
@@ -91,6 +143,7 @@
         if (debugEnabled && window.console && typeof window.console.info === "function") {
             window.console.info("[portfolio-ga]", name, payload);
         }
+        addDebugLine("event: " + name);
         window.gtag("event", name, payload);
     }
 
@@ -110,12 +163,14 @@
     function ensureBaseConfig() {
         var measurementId = getMeasurementId();
         if (!measurementId) {
+            addDebugLine("measurement id not found");
             return "";
         }
         if (!window.__portfolioGaConfigured) {
             window.gtag("js", new Date());
             window.gtag("config", measurementId);
             window.__portfolioGaConfigured = true;
+            addDebugLine("configured: " + measurementId);
         }
         return measurementId;
     }
@@ -362,8 +417,13 @@
             return;
         }
         fireEvent("portfolio_tracker_heartbeat", {
-            tracker_version: "20260220c"
+            tracker_version: "20260220g"
         });
+    }
+
+    if (debugEnabled) {
+        addDebugLine("tracker loaded");
+        addDebugLine("gtag type: " + typeof window.gtag);
     }
 
     ensureBaseConfig();
