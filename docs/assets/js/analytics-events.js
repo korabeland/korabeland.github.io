@@ -1,10 +1,16 @@
 (function () {
     "use strict";
 
-    if (window.__portfolioAnalyticsLoaded || typeof window.gtag !== "function") {
+    if (window.__portfolioAnalyticsLoaded) {
         return;
     }
     window.__portfolioAnalyticsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    if (typeof window.gtag !== "function") {
+        window.gtag = function () {
+            window.dataLayer.push(arguments);
+        };
+    }
 
     var path = window.location.pathname || "/";
     if (path.slice(-1) === "/") {
@@ -98,11 +104,24 @@
         }
     }
 
+    function ensureBaseConfig() {
+        var measurementId = getMeasurementId();
+        if (!measurementId) {
+            return "";
+        }
+        if (!window.__portfolioGaConfigured) {
+            window.gtag("js", new Date());
+            window.gtag("config", measurementId);
+            window.__portfolioGaConfigured = true;
+        }
+        return measurementId;
+    }
+
     function enableDebugMode() {
         if (!debugEnabled) {
             return;
         }
-        var measurementId = getMeasurementId();
+        var measurementId = ensureBaseConfig();
         if (!measurementId) {
             return;
         }
@@ -344,6 +363,7 @@
         });
     }
 
+    ensureBaseConfig();
     trackProjectSession();
     trackCaseStudyReadComplete();
     trackLinkClicks();
