@@ -1,32 +1,37 @@
 /* ===== CSS CUSTOM PROPERTIES ===== */
 :root {
-    /* Colors */
-    --color-primary: #1a1a1a;
-    --color-secondary: #333;
-    --color-tertiary: #4a4a4a;
+    /* Brand Colors (Grayscale Palette) */
+    --color-primary: #1a1a1a;      /* Darkest - headers, buttons */
+    --color-secondary: #333;        /* Dark gray - buttons, text accents */
+    --color-tertiary: #4a4a4a;      /* Medium-dark - hover states */
+
+    /* Neutral Colors */
     --color-white: #fff;
-    --color-bg-light: #f5f5f5;
-    --color-text-dark: #1a1a1a;
-    --color-text-body: #333;
-    --color-text-muted: #555;
-    --color-text-light: #666;
-    --color-text-lighter: #ccc;
-    --color-text-lightest: #d0d0d0;
-    --color-nav-link: #e0e0e0;
+    --color-bg-light: #f5f5f5;      /* Light gray background */
     --color-border: #ddd;
-    --color-badge-bg: #e0e0e0;
-    --color-focus: #4a9eff;
+    --color-badge-bg: #e0e0e0;      /* Badge backgrounds, nav links on dark bg */
+
+    /* Text Colors (semantic scale: dark to light) */
+    --color-text-dark: #1a1a1a;     /* Headings */
+    --color-text-body: #333;        /* Body text (same as secondary) */
+    --color-text-muted: #555;       /* Secondary text */
+    --color-text-light: #666;       /* Tertiary text, descriptions */
+    --color-text-lighter: #ccc;     /* Footer text on dark bg */
+    --color-text-lightest: #d0d0d0; /* Hero subtitle on dark bg */
+
+    /* Utility Colors */
+    --color-focus: #4a9eff;         /* Focus states (accessibility) */
 
     /* Layout */
     --max-width: 1200px;
 
-    /* Spacing */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 4rem;
-    --spacing-2xl: 8rem;
+    /* Spacing Scale */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 1rem;     /* 16px */
+    --spacing-md: 1.5rem;   /* 24px */
+    --spacing-lg: 2rem;     /* 32px */
+    --spacing-xl: 4rem;     /* 64px */
+    --spacing-2xl: 8rem;    /* 128px */
 }
 
 /* ===== RESET & BASE STYLES ===== */
@@ -121,7 +126,7 @@ header {
 }
 
 .nav-links a {
-    color: var(--color-nav-link);
+    color: var(--color-badge-bg);
     text-decoration: none;
     transition: color 0.3s ease;
     font-weight: 500;
@@ -161,6 +166,44 @@ button:focus,
 .hero-content p {
     font-size: 1.25rem;
     color: var(--color-text-lightest);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-cta {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-cta .btn {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+}
+
+.hero-metrics {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.metric-chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.85rem;
 }
 
 /* ===== SECTIONS ===== */
@@ -191,9 +234,47 @@ section {
     text-align: center;
 }
 
+#framework {
+    background-color: var(--color-bg-light);
+}
+
+#framework h2 {
+    text-align: center;
+}
+
 #contact {
     background-color: var(--color-white);
     text-align: center;
+}
+
+.section-intro {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.framework-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.framework-card {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+}
+
+.framework-card h3 {
+    font-size: 1.2rem;
+}
+
+.framework-card p {
+    margin-bottom: 0;
 }
 
 .contact-links {
@@ -232,6 +313,11 @@ section {
 .project-card p {
     color: var(--color-text-light);
     margin-bottom: var(--spacing-md);
+}
+
+.project-impact {
+    color: var(--color-text-body);
+    font-weight: 600;
 }
 
 .project-meta {
@@ -275,12 +361,39 @@ section {
 
 .btn-primary {
     background-color: var(--color-tertiary);
-    font-size: 1.1rem;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 1rem;
+    padding: 0.75rem var(--spacing-md);
 }
 
 .btn-primary:hover {
     background-color: var(--color-secondary);
+}
+
+.contact-links .btn-primary {
+    min-width: 120px;
+    justify-content: center;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--color-white);
+    color: var(--color-white);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--color-white);
+}
+
+.btn-ghost {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: var(--color-white);
+}
+
+.btn-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--color-white);
 }
 
 /* ===== FOOTER ===== */
@@ -696,6 +809,254 @@ footer p {
     color: var(--color-text-muted);
 }
 
+/* ===== PROJECT DETAIL PAGES ===== */
+
+/* Project Page Sections */
+.project-hero {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-white);
+}
+
+.project-section {
+    padding: 3rem 0;
+    background-color: var(--color-white);
+}
+
+.project-section--alt {
+    padding: 3rem 0;
+    background-color: var(--color-bg-light);
+}
+
+/* Project Page Typography */
+.project-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.project-lead {
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+}
+
+.subsection-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.subsection-title--lg {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    background-color: var(--color-badge-bg);
+    color: var(--color-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+/* Highlight Box (with left border accent) */
+.highlight-box {
+    background-color: var(--color-white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-secondary);
+}
+
+.highlight-box--alt {
+    background-color: var(--color-bg-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-secondary);
+}
+
+.highlight-box p {
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+}
+
+.highlight-box p:last-child {
+    margin-bottom: 0;
+}
+
+/* Content Box (bordered container) */
+.content-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.content-box--light {
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.content-box h4 {
+    margin-bottom: 1rem;
+}
+
+/* Card Grids */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.card-grid--sm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Phase Cards (for development phases/timelines) */
+.phase-card {
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.phase-card--active {
+    background-color: var(--color-bg-light);
+    border: 2px solid var(--color-secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.phase-card h4 {
+    margin-bottom: 0.75rem;
+    color: var(--color-text-dark);
+}
+
+.phase-card__subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+}
+
+.phase-card__status {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: var(--color-white);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+/* Stat Cards (for metrics display) */
+.stat-card {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-card__value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-card__label {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+/* Feature Cards (smaller info cards) */
+.feature-card {
+    background-color: var(--color-white);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+.feature-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+}
+
+/* Styled Lists */
+.styled-list {
+    padding-left: 1.5rem;
+    color: var(--color-text-muted);
+}
+
+.styled-list li {
+    margin-bottom: 0.5rem;
+}
+
+.styled-list--spaced li {
+    margin-bottom: 0.75rem;
+}
+
+.styled-list--sm {
+    padding-left: 1.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.styled-list--sm li {
+    margin-bottom: 0.5rem;
+}
+
+/* Tech Badges Container */
+.tech-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.tech-badges .project-meta {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+/* Tech Stack Box */
+.tech-stack-box {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background-color: var(--color-bg-light);
+    border-radius: 8px;
+}
+
+.tech-stack-box h4 {
+    margin-bottom: 1rem;
+}
+
+/* Project Page Utilities */
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-2-5 { margin-top: 2.5rem; }
+.mb-1 { margin-bottom: 1rem; }
+
+/* Project Footer Actions */
+.project-actions {
+    margin-top: 2.5rem;
+}
+
+.project-actions .btn + .btn {
+    margin-left: 1rem;
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
     .nav-container {
@@ -721,6 +1082,24 @@ footer p {
 
     .projects-grid {
         grid-template-columns: 1fr;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-cta .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-metrics {
+        flex-direction: column;
+        align-items: center;
     }
 
     /* Prompt Library Mobile Styles */
@@ -778,5 +1157,34 @@ footer p {
     .back-link {
         width: 100%;
         justify-content: flex-start;
+    }
+
+    /* Project Detail Page Mobile */
+    .project-title {
+        font-size: 1.8rem;
+    }
+
+    .project-lead {
+        font-size: 1rem;
+    }
+
+    .card-grid,
+    .card-grid--sm {
+        grid-template-columns: 1fr;
+    }
+
+    .project-actions .btn + .btn {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
+    .project-actions {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-actions .btn {
+        width: 100%;
+        justify-content: center;
     }
 }

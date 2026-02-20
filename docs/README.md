@@ -1,65 +1,42 @@
-# Korab Eland - AI-Assisted Development Portfolio
+# docs/ Site Source Guide
 
-🌐 **Portfolio Site**: [korabeland.github.io](https://korabeland.github.io) (launching soon)
+This folder is the publishable website source for GitHub Pages.
 
-You've arrived at my personal portfolio of AI-assisted coding/engineering/data science projects. This repository showcases agent-collaboration development, demonstrating the synergy between human creativity and AI capabilities.
+## Scope
+- `index.html`: Homepage narrative and conversion flow.
+- `styles.css`: Shared design system and component styles.
+- `projects/`: Individual project/case-study pages.
+- `prompt-library/`: Prompt library pages, categories, and downloadable assets.
 
-## About Me
+## Editing Rules
+1. Keep the homepage portfolio-first, with a calm recruiter-friendly tone.
+2. Prioritize business outcomes and decision logic in project summaries.
+3. Keep accessibility intact (semantic headings, focus styles, keyboard support).
+4. Use existing CSS variables and component patterns in `styles.css`.
+5. Add GA4 tracking to every new `docs/*.html` page, including the shared event tracker.
 
-I am currently the CX Manager for Keypath Education APAC, an EdTech company based in Melbourne, Australia. My career journey has evolved from Digital Media Marketing to Customer Experience Strategy and is leaning towards Product Management.
+## Analytics (Required on all pages)
+Include both snippets before `</head>` on every page in `docs/`:
 
-## Skills
-
-- Product Management
-- CX Strategy & Program Management
-- Data Analysis & ML
-- AI-Assisted Development
-- Python, XGBoost, scikit-learn
-
-## Featured Projects
-
-### 📊 Enrollment Forecasting System
-ML-powered enrollment forecasting with cohort-based modeling and XGBoost enhancement. Predicts student enrollments across Partner × Program × Channel × Intake dimensions.
-
-**Location**: `/Forecasting/`
-**Status**: Active Development
-**Tech**: Python, pandas, XGBoost, Power BI
-
-### 🎯 Lead Scoring System
-XGBoost ML model delivering $1.4M+ annual ROI through Tier 3 optimization. Identifies 23.2% of leads to safely filter with 95%+ precision.
-
-**Location**: `/Lead-Scoring/`
-**Status**: Active Development
-**Tech**: XGBoost, scikit-learn, Python
-
-## Repository Structure
-
-```
-korabeland.github.io/
-├── index.html              # Portfolio homepage
-├── styles.css              # Design system (grayscale theme)
-├── projects/               # Project detail pages
-│   ├── forecasting.html
-│   └── lead-scoring.html
-├── Forecasting/            # Forecasting system code & docs
-│   ├── Pilot/              # Proof-of-concept implementation
-│   └── CLAUDE.md           # Development guidance
-├── Lead-Scoring/           # Lead scoring system code & docs
-│   ├── Korab/              # Implementation notebooks
-│   └── CLAUDE.md           # Development guidance
-├── CLAUDE.md               # Portfolio site instructions
-└── README.md               # This file
+```html
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LVJ7FH16ZK"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LVJ7FH16ZK');
+</script>
+<script defer src="RELATIVE_PATH_TO/assets/js/analytics-events.js"></script>
 ```
 
-## Development Approach
+`RELATIVE_PATH_TO` examples:
+- `assets/js/analytics-events.js` for files directly under `docs/`
+- `../assets/js/analytics-events.js` for files under `docs/projects/` or `docs/prompt-library/`
+- `../../assets/js/analytics-events.js` for files under `docs/prompt-library/categories/`
+- `../../../assets/js/analytics-events.js` for files under `docs/prompt-library/details/document-templates/`
 
-These projects demonstrate **AI-assisted development** through agent collaboration. Each project includes comprehensive documentation, iterative refinement, and transparent progress tracking (including work-in-progress status).
+## Local Preview
+Open `docs/index.html` in a browser.
 
-## Contact
-
-- 🔗 [LinkedIn](https://www.linkedin.com/in/korabeland)
-- 💻 [GitHub](https://github.com/korabeland)
-
----
-
-*Built with AI collaboration • Portfolio showcasing iterative development and human-AI synergy*
+## Publishing
+Use `scripts/publish-docs.ps1` from repo root to publish only `docs/` into the public site repository.

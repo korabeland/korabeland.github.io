@@ -6,6 +6,14 @@
     <meta name="description" content="Chatbot Evaluation Framework - Building a grounded theory-based evaluation system for Australian university postgraduate chatbots using AI-assisted methodology.">
     <title>Chatbot Evaluation Framework | Agent-Colab Portfolio</title>
     <link rel="stylesheet" href="../styles.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LVJ7FH16ZK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date());
+        gtag('config', 'G-LVJ7FH16ZK');
+    </script>
+    <script defer src="../assets/js/analytics-events.js"></script>
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
@@ -25,17 +33,17 @@
     </header>
 
     <main id="main">
-        <section style="padding: 4rem 0; background-color: var(--color-white);">
+        <section class="project-hero">
             <div class="container">
-                <div style="display: inline-block; background-color: var(--color-badge-bg); color: var(--color-secondary); padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.875rem; font-weight: 500; margin-bottom: 1.5rem;">
+                <div class="status-badge">
                     🚧 Active Development
                 </div>
-                <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">Chatbot Evaluation Framework</h1>
-                <p style="font-size: 1.25rem; color: var(--color-text-light); margin-bottom: 2rem;">Building a grounded theory-based evaluation system for Australian university postgraduate chatbots using rigorous qualitative methodology and AI-assisted automation.</p>
+                <h1 class="project-title">Chatbot Evaluation Framework</h1>
+                <p class="project-lead">Building a grounded theory-based evaluation system for Australian university postgraduate chatbots using rigorous qualitative methodology and AI-assisted automation.</p>
             </div>
         </section>
 
-        <section style="padding: 3rem 0; background-color: var(--color-bg-light);">
+        <section class="project-section--alt">
             <div class="container">
                 <h2>The Challenge</h2>
                 <p>As the builder of chatbots serving prospective postgraduate students at three Australian universities (UNSW, Southern Cross University, and Victoria University), I needed a systematic way to evaluate chatbot performance across 3000+ real-world conversations collected over four months. These chatbots answer critical questions about courses, fees, entry requirements, and career outcomes - information that directly impacts students' educational decisions.</p>
@@ -44,70 +52,70 @@
 
                 <p>Traditional chatbot evaluation methods often rely on preset rubrics or metrics that may not capture the nuances of educational customer experience. I wanted to build something more rigorous - a framework grounded in what actually happens in these conversations, not what we assume should matter.</p>
 
-                <h3 style="margin-top: 2.5rem; margin-bottom: 1rem;">The Goal</h3>
-                <div style="background-color: var(--color-white); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--color-secondary);">
-                    <p style="color: var(--color-text-muted); margin: 0;">Create a data-driven evaluation framework that systematically assesses chatbot quality across thousands of conversations, progressing from qualitative analysis to semi-automated LLM-based evaluation while maintaining methodological rigor.</p>
+                <h3 class="subsection-title--lg">The Goal</h3>
+                <div class="highlight-box">
+                    <p>Create a data-driven evaluation framework that systematically assesses chatbot quality across thousands of conversations, progressing from qualitative analysis to semi-automated LLM-based evaluation while maintaining methodological rigor.</p>
                 </div>
             </div>
         </section>
 
-        <section style="padding: 3rem 0; background-color: var(--color-white);">
+        <section class="project-section">
             <div class="container">
                 <h2>Development Approach</h2>
                 <p>Rather than starting with assumptions about what makes a "good" chatbot conversation, I adopted a grounded theory methodology - a qualitative research approach where evaluation criteria emerge from systematic observation of the data itself. This methodology is particularly powerful for complex domains where quality is multifaceted and context-dependent.</p>
 
                 <p>Working with Claude Code, I designed a four-phase evolution that balances research rigor with practical scalability. Each phase builds on the previous one, progressing from deep manual analysis to semi-automated evaluation.</p>
 
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">The Four-Phase Strategy</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-                    <div style="background-color: var(--color-bg-light); border: 2px solid var(--color-secondary); border-radius: 8px; padding: 1.5rem;">
-                        <h4 style="margin-bottom: 0.75rem; color: var(--color-text-dark);">Phase 1: Open Coding Setup</h4>
-                        <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 1rem;">Create infrastructure for systematic observation without predetermined categories</div>
-                        <ul style="padding-left: 1.5rem; color: var(--color-text-muted); font-size: 0.9rem;">
-                            <li style="margin-bottom: 0.5rem;">Stratified sampling of 100 conversations (by university and length)</li>
-                            <li style="margin-bottom: 0.5rem;">Data exploration and distribution analysis</li>
-                            <li style="margin-bottom: 0.5rem;">Open coding template and methodology guide</li>
+                <h3 class="subsection-title mt-2">The Four-Phase Strategy</h3>
+                <div class="card-grid">
+                    <div class="phase-card--active">
+                        <h4>Phase 1: Open Coding Setup</h4>
+                        <div class="phase-card__subtitle">Create infrastructure for systematic observation without predetermined categories</div>
+                        <ul class="styled-list--sm">
+                            <li>Stratified sampling of 100 conversations (by university and length)</li>
+                            <li>Data exploration and distribution analysis</li>
+                            <li>Open coding template and methodology guide</li>
                         </ul>
-                        <div style="margin-top: 1rem; padding: 0.5rem; background-color: var(--color-white); border-radius: 4px; font-size: 0.875rem;">
+                        <div class="phase-card__status">
                             <strong>Status:</strong> ✓ Complete
                         </div>
                     </div>
 
-                    <div style="background-color: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.5rem;">
-                        <h4 style="margin-bottom: 0.75rem; color: var(--color-text-dark);">Phase 2: Manual Open Coding</h4>
-                        <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 1rem;">Review 100 conversations and document observed patterns</div>
-                        <ul style="padding-left: 1.5rem; color: var(--color-text-muted); font-size: 0.9rem;">
-                            <li style="margin-bottom: 0.5rem;">Descriptive observation of each conversation</li>
-                            <li style="margin-bottom: 0.5rem;">Note what works well and what struggles</li>
-                            <li style="margin-bottom: 0.5rem;">Capture unexpected patterns and surprises</li>
+                    <div class="phase-card">
+                        <h4>Phase 2: Manual Open Coding</h4>
+                        <div class="phase-card__subtitle">Review 100 conversations and document observed patterns</div>
+                        <ul class="styled-list--sm">
+                            <li>Descriptive observation of each conversation</li>
+                            <li>Note what works well and what struggles</li>
+                            <li>Capture unexpected patterns and surprises</li>
                         </ul>
-                        <div style="margin-top: 1rem; padding: 0.5rem; background-color: var(--color-white); border-radius: 4px; font-size: 0.875rem;">
+                        <div class="phase-card__status">
                             <strong>Status:</strong> 🚧 In Progress
                         </div>
                     </div>
 
-                    <div style="background-color: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.5rem;">
-                        <h4 style="margin-bottom: 0.75rem; color: var(--color-text-dark);">Phase 3: Axial Coding & Framework</h4>
-                        <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 1rem;">Analyze observations to identify themes and create evaluation rubric</div>
-                        <ul style="padding-left: 1.5rem; color: var(--color-text-muted); font-size: 0.9rem;">
-                            <li style="margin-bottom: 0.5rem;">Group similar observations into categories</li>
-                            <li style="margin-bottom: 0.5rem;">Define evaluation dimensions from patterns</li>
-                            <li style="margin-bottom: 0.5rem;">Create scoring criteria and rubric</li>
+                    <div class="phase-card">
+                        <h4>Phase 3: Axial Coding & Framework</h4>
+                        <div class="phase-card__subtitle">Analyze observations to identify themes and create evaluation rubric</div>
+                        <ul class="styled-list--sm">
+                            <li>Group similar observations into categories</li>
+                            <li>Define evaluation dimensions from patterns</li>
+                            <li>Create scoring criteria and rubric</li>
                         </ul>
-                        <div style="margin-top: 1rem; padding: 0.5rem; background-color: var(--color-white); border-radius: 4px; font-size: 0.875rem;">
+                        <div class="phase-card__status">
                             <strong>Status:</strong> Pending
                         </div>
                     </div>
 
-                    <div style="background-color: var(--color-bg-light); border: 1px solid var(--color-border); border-radius: 8px; padding: 1.5rem;">
-                        <h4 style="margin-bottom: 0.75rem; color: var(--color-text-dark);">Phase 4: LLM Automation</h4>
-                        <div style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 1rem;">Scale evaluation using LLM-as-judge with validated rubric</div>
-                        <ul style="padding-left: 1.5rem; color: var(--color-text-muted); font-size: 0.9rem;">
-                            <li style="margin-bottom: 0.5rem;">Build Python automation scripts</li>
-                            <li style="margin-bottom: 0.5rem;">Validate automated scores against manual coding</li>
-                            <li style="margin-bottom: 0.5rem;">Create before/after comparison workflow</li>
+                    <div class="phase-card">
+                        <h4>Phase 4: LLM Automation</h4>
+                        <div class="phase-card__subtitle">Scale evaluation using LLM-as-judge with validated rubric</div>
+                        <ul class="styled-list--sm">
+                            <li>Build Python automation scripts</li>
+                            <li>Validate automated scores against manual coding</li>
+                            <li>Create before/after comparison workflow</li>
                         </ul>
-                        <div style="margin-top: 1rem; padding: 0.5rem; background-color: var(--color-white); border-radius: 4px; font-size: 0.875rem;">
+                        <div class="phase-card__status">
                             <strong>Status:</strong> Planned
                         </div>
                     </div>
@@ -115,127 +123,127 @@
             </div>
         </section>
 
-        <section style="padding: 3rem 0; background-color: var(--color-bg-light);">
+        <section class="project-section--alt">
             <div class="container">
                 <h2>How It Works</h2>
                 <p>The system is built around a principle: quality criteria should emerge from the data, not be imposed on it. Starting with 32,069 conversations spanning February to July 2025, I used stratified sampling to create a representative subset that maintains diversity across universities and conversation complexity.</p>
 
-                <div style="margin-top: 2rem; padding: 1.5rem; background-color: var(--color-white); border: 1px solid var(--color-border); border-radius: 8px;">
-                    <h4 style="margin-bottom: 1rem;">Core Methodology</h4>
-                    <ol style="padding-left: 1.5rem; color: var(--color-text-muted);">
-                        <li style="margin-bottom: 0.75rem;"><strong>Stratified Sampling</strong>: Python scripts filter for chatbot-tagged conversations across three universities, then sample 100 conversations proportionally by university and conversation length (short, medium, long)</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>Open Coding</strong>: Manual review of each conversation with descriptive observations - noting patterns, issues, and effective moments without applying predetermined criteria</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>Axial Coding</strong>: Analysis of all observations to identify recurring themes, group similar patterns, and quantify frequency of each category</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>Framework Creation</strong>: Convert identified themes into concrete evaluation dimensions with scoring rubrics and exemplar conversations</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>LLM-as-Judge Automation</strong>: Use the validated rubric to build automated evaluation scripts that can process thousands of conversations while maintaining evaluation consistency</li>
+                <div class="content-box">
+                    <h4>Core Methodology</h4>
+                    <ol class="styled-list">
+                        <li><strong>Stratified Sampling</strong>: Python scripts filter for chatbot-tagged conversations across three universities, then sample 100 conversations proportionally by university and conversation length (short, medium, long)</li>
+                        <li><strong>Open Coding</strong>: Manual review of each conversation with descriptive observations - noting patterns, issues, and effective moments without applying predetermined criteria</li>
+                        <li><strong>Axial Coding</strong>: Analysis of all observations to identify recurring themes, group similar patterns, and quantify frequency of each category</li>
+                        <li><strong>Framework Creation</strong>: Convert identified themes into concrete evaluation dimensions with scoring rubrics and exemplar conversations</li>
+                        <li><strong>LLM-as-Judge Automation</strong>: Use the validated rubric to build automated evaluation scripts that can process thousands of conversations while maintaining evaluation consistency</li>
                     </ol>
                 </div>
 
-                <h3 style="margin-top: 2.5rem; margin-bottom: 1rem;">Key Features</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-                    <div style="background-color: var(--color-white); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border);">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Stratified Data Sampling</h4>
-                        <p style="font-size: 0.9rem; color: var(--color-text-muted);">Python scripts that automatically sample conversations proportionally by university and complexity, ensuring representative analysis across diverse interaction types.</p>
+                <h3 class="subsection-title--lg">Key Features</h3>
+                <div class="card-grid--sm">
+                    <div class="feature-card">
+                        <h4>Stratified Data Sampling</h4>
+                        <p>Python scripts that automatically sample conversations proportionally by university and complexity, ensuring representative analysis across diverse interaction types.</p>
                     </div>
 
-                    <div style="background-color: var(--color-white); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border);">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Data Exploration Tools</h4>
-                        <p style="font-size: 0.9rem; color: var(--color-text-muted);">Scripts for analyzing conversation distribution, length statistics, date ranges, and university representation across the full 32,000+ conversation dataset.</p>
+                    <div class="feature-card">
+                        <h4>Data Exploration Tools</h4>
+                        <p>Scripts for analyzing conversation distribution, length statistics, date ranges, and university representation across the full 32,000+ conversation dataset.</p>
                     </div>
 
-                    <div style="background-color: var(--color-white); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border);">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Grounded Theory Methodology Guide</h4>
-                        <p style="font-size: 0.9rem; color: var(--color-text-muted);">Comprehensive documentation explaining open coding principles, note-taking best practices, and how to progress from observation to evaluation framework.</p>
+                    <div class="feature-card">
+                        <h4>Grounded Theory Methodology Guide</h4>
+                        <p>Comprehensive documentation explaining open coding principles, note-taking best practices, and how to progress from observation to evaluation framework.</p>
                     </div>
 
-                    <div style="background-color: var(--color-white); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border);">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Open Coding Template</h4>
-                        <p style="font-size: 0.9rem; color: var(--color-text-muted);">Structured CSV workspace with 100 sampled conversations ready for systematic manual annotation, organized by university with space for descriptive observations.</p>
+                    <div class="feature-card">
+                        <h4>Open Coding Template</h4>
+                        <p>Structured CSV workspace with 100 sampled conversations ready for systematic manual annotation, organized by university with space for descriptive observations.</p>
                     </div>
 
-                    <div style="background-color: var(--color-white); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border);">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Phase-Based Project Roadmap</h4>
-                        <p style="font-size: 0.9rem; color: var(--color-text-muted);">Clear progression from manual qualitative analysis to semi-automated evaluation, with defined milestones and deliverables for each phase.</p>
+                    <div class="feature-card">
+                        <h4>Phase-Based Project Roadmap</h4>
+                        <p>Clear progression from manual qualitative analysis to semi-automated evaluation, with defined milestones and deliverables for each phase.</p>
                     </div>
 
-                    <div style="background-color: var(--color-white); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border);">
-                        <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Future: LLM-as-Judge Automation</h4>
-                        <p style="font-size: 0.9rem; color: var(--color-text-muted);">Planned system to scale evaluation using Claude or GPT APIs with the validated rubric, enabling before/after comparisons for measuring chatbot improvements.</p>
+                    <div class="feature-card">
+                        <h4>Future: LLM-as-Judge Automation</h4>
+                        <p>Planned system to scale evaluation using Claude or GPT APIs with the validated rubric, enabling before/after comparisons for measuring chatbot improvements.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section style="padding: 3rem 0; background-color: var(--color-white);">
+        <section class="project-section">
             <div class="container">
                 <h2>My Role & Approach</h2>
                 <p>This project demonstrates how domain knowledge combines with AI capabilities to build rigorous evaluation systems. As someone who built these chatbots and understands the customer experience journey for prospective students, I brought the strategic framing and quality intuition. Claude Code provided the technical implementation and methodological guidance to make this vision executable.</p>
 
-                <div style="margin-top: 2rem;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">What I Brought:</h3>
-                    <ul style="padding-left: 1.5rem; color: var(--color-text-muted);">
-                        <li style="margin-bottom: 0.5rem;">Deep understanding of chatbot evaluation needs from building and managing these systems in production</li>
-                        <li style="margin-bottom: 0.5rem;">Domain expertise about university student journeys and customer experience in higher education</li>
-                        <li style="margin-bottom: 0.5rem;">Learning about how to set up AI evaluations and apply grounded theory methodology to chatbot quality assessment</li>
-                        <li style="margin-bottom: 0.5rem;">Context about known failure modes (hallucinated details, length issues, inconsistencies) and success indicators (brochure downloads, meaningful engagement)</li>
+                <div class="mt-2">
+                    <h3 class="subsection-title">What I Brought:</h3>
+                    <ul class="styled-list">
+                        <li>Deep understanding of chatbot evaluation needs from building and managing these systems in production</li>
+                        <li>Domain expertise about university student journeys and customer experience in higher education</li>
+                        <li>Learning about how to set up AI evaluations and apply grounded theory methodology to chatbot quality assessment</li>
+                        <li>Context about known failure modes (hallucinated details, length issues, inconsistencies) and success indicators (brochure downloads, meaningful engagement)</li>
                     </ul>
                 </div>
 
-                <div style="margin-top: 2rem;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">What Claude Code Brought:</h3>
-                    <ul style="padding-left: 1.5rem; color: var(--color-text-muted);">
-                        <li style="margin-bottom: 0.5rem;">Python implementation to gather the sampled open coding template with stratified random sampling logic</li>
-                        <li style="margin-bottom: 0.5rem;">Explained grounded theory concepts and how to apply qualitative research methodology to technical evaluation</li>
-                        <li style="margin-bottom: 0.5rem;">Methodology guide writing with clear instructions for open coding, note-taking practices, and progression to axial coding</li>
-                        <li style="margin-bottom: 0.5rem;">Data exploration scripts using pandas for analyzing conversation distribution, handling large Excel files, and CSV manipulation</li>
+                <div class="mt-2">
+                    <h3 class="subsection-title">What Claude Code Brought:</h3>
+                    <ul class="styled-list">
+                        <li>Python implementation to gather the sampled open coding template with stratified random sampling logic</li>
+                        <li>Explained grounded theory concepts and how to apply qualitative research methodology to technical evaluation</li>
+                        <li>Methodology guide writing with clear instructions for open coding, note-taking practices, and progression to axial coding</li>
+                        <li>Data exploration scripts using pandas for analyzing conversation distribution, handling large Excel files, and CSV manipulation</li>
                     </ul>
                 </div>
 
-                <div style="margin-top: 2.5rem; padding: 1.5rem; background-color: var(--color-bg-light); border-radius: 8px;">
-                    <h4 style="margin-bottom: 1rem;">Technologies Used</h4>
-                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
-                        <span class="project-meta" style="display: inline-block;"><span>Python</span></span>
-                        <span class="project-meta" style="display: inline-block;"><span>Pandas</span></span>
-                        <span class="project-meta" style="display: inline-block;"><span>Openpyxl</span></span>
-                        <span class="project-meta" style="display: inline-block;"><span>Grounded Theory</span></span>
-                        <span class="project-meta" style="display: inline-block;"><span>Claude API</span></span>
-                        <span class="project-meta" style="display: inline-block;"><span>Claude Code</span></span>
+                <div class="tech-stack-box">
+                    <h4>Technologies Used</h4>
+                    <div class="tech-badges">
+                        <span class="project-meta"><span>Python</span></span>
+                        <span class="project-meta"><span>Pandas</span></span>
+                        <span class="project-meta"><span>Openpyxl</span></span>
+                        <span class="project-meta"><span>Grounded Theory</span></span>
+                        <span class="project-meta"><span>Claude API</span></span>
+                        <span class="project-meta"><span>Claude Code</span></span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section style="padding: 3rem 0; background-color: var(--color-bg-light);">
+        <section class="project-section--alt">
             <div class="container">
                 <h2>Key Learnings</h2>
 
-                <div style="background-color: var(--color-white); padding: 1.5rem; border-radius: 8px;">
-                    <ul style="padding-left: 1.5rem; color: var(--color-text-muted);">
-                        <li style="margin-bottom: 0.75rem;"><strong>Grounded Theory in Practice</strong>: Learning to apply rigorous qualitative research methodology to technical evaluation challenges. The discipline of observing without evaluating requires patience but yields more robust, data-driven criteria than preset assumptions.</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>Practical Python Applications</strong>: Discovering how Python and pandas can prepare complex datasets for qualitative analysis. Stratified sampling, data exploration, and CSV manipulation are powerful skills for bridging quantitative and qualitative research.</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>Building Workflows in Claude Code</strong>: Continuing to develop systematic approaches for AI-assisted project work. Breaking complex methodologies into phases, documenting processes, and creating reproducible workflows enhances both learning and project quality.</li>
-                        <li style="margin-bottom: 0.75rem;"><strong>Scaling Qualitative Insights</strong>: Understanding how manual deep analysis can inform automated systems. The grounded theory foundation will make the eventual LLM-as-judge automation more accurate and contextually appropriate than starting with preset metrics.</li>
+                <div class="content-box--light">
+                    <ul class="styled-list--spaced">
+                        <li><strong>Grounded Theory in Practice</strong>: Learning to apply rigorous qualitative research methodology to technical evaluation challenges. The discipline of observing without evaluating requires patience but yields more robust, data-driven criteria than preset assumptions.</li>
+                        <li><strong>Practical Python Applications</strong>: Discovering how Python and pandas can prepare complex datasets for qualitative analysis. Stratified sampling, data exploration, and CSV manipulation are powerful skills for bridging quantitative and qualitative research.</li>
+                        <li><strong>Building Workflows in Claude Code</strong>: Continuing to develop systematic approaches for AI-assisted project work. Breaking complex methodologies into phases, documenting processes, and creating reproducible workflows enhances both learning and project quality.</li>
+                        <li><strong>Scaling Qualitative Insights</strong>: Understanding how manual deep analysis can inform automated systems. The grounded theory foundation will make the eventual LLM-as-judge automation more accurate and contextually appropriate than starting with preset metrics.</li>
                     </ul>
                 </div>
 
-                <h3 style="margin-top: 2.5rem; margin-bottom: 1rem;">What's Next</h3>
-                <div style="background-color: var(--color-white); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--color-secondary);">
-                    <p style="color: var(--color-text-muted); margin-bottom: 1rem;">After completing the four-phase methodology, the evaluation framework will enable practical business impact:</p>
-                    <ul style="padding-left: 1.5rem; color: var(--color-text-muted);">
-                        <li style="margin-bottom: 0.5rem;"><strong>Before/After Comparisons</strong>: Using more recent transcript data from UNSW to measure the impact of chatbot enhancements, validating that improvements actually improve evaluated quality dimensions</li>
-                        <li style="margin-bottom: 0.5rem;"><strong>Automated LLM-as-Judge Process</strong>: Building a production workflow that can continuously evaluate new conversations using the validated rubric, creating ongoing quality monitoring</li>
-                        <li style="margin-bottom: 0.5rem;"><strong>Expansion to Additional Universities</strong>: Applying the framework to chatbots at other institutions to understand if quality patterns are universal or institution-specific</li>
+                <h3 class="subsection-title--lg">What's Next</h3>
+                <div class="highlight-box">
+                    <p>After completing the four-phase methodology, the evaluation framework will enable practical business impact:</p>
+                    <ul class="styled-list">
+                        <li><strong>Before/After Comparisons</strong>: Using more recent transcript data from UNSW to measure the impact of chatbot enhancements, validating that improvements actually improve evaluated quality dimensions</li>
+                        <li><strong>Automated LLM-as-Judge Process</strong>: Building a production workflow that can continuously evaluate new conversations using the validated rubric, creating ongoing quality monitoring</li>
+                        <li><strong>Expansion to Additional Universities</strong>: Applying the framework to chatbots at other institutions to understand if quality patterns are universal or institution-specific</li>
                     </ul>
                 </div>
 
-                <div style="margin-top: 2.5rem;">
+                <div class="project-actions">
                     <a href="https://github.com/korabeland/korabeland.github.io" class="btn" target="_blank" rel="noopener noreferrer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                         </svg>
                         View on GitHub
                     </a>
-                    <a href="../index.html#projects" class="btn" style="margin-left: 1rem;">← Back to Projects</a>
+                    <a href="../index.html#projects" class="btn">← Back to Projects</a>
                 </div>
             </div>
         </section>
@@ -248,3 +256,4 @@
     </footer>
 </body>
 </html>
+
