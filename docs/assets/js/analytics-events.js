@@ -88,6 +88,9 @@
         if (typeof callback === "function") {
             payload.event_callback = callback;
         }
+        if (debugEnabled && window.console && typeof window.console.info === "function") {
+            window.console.info("[portfolio-ga]", name, payload);
+        }
         window.gtag("event", name, payload);
     }
 
