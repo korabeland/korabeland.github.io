@@ -1,140 +1,80 @@
-# Portfolio Site - Git Ignore Configuration
+# Portfolio Workspace Ignore Rules
+# Goal: keep publishable website content in `docs/` and keep private workspace content out of commits by default.
 
-# ===== PROJECT DIRECTORIES (KEEP PRIVATE - KEYPATH IP) =====
-# Entire project directories with code, specs, and data
-Forecasting/
-Lead-Scoring/
+# Private workspace roots (internal tooling, source materials, raw projects)
+# Leading / anchors to repo root so docs/projects/ is NOT ignored on
+# case-insensitive filesystems (Windows).
+/.claude/
+/Projects/
+/Prompt Library/
+/Claude Skills/
 
-# ===== INTERNAL DOCUMENTATION (KEEP PRIVATE) =====
-CLAUDE.md
+# Sensitive/personal root files
+Korab_Eland_Resume.docx
 code_review_log.md
-todo.md
-todo_phase*.md
+ai-fluency-analogy.md
+writing-voice.md
 
-# ===== DATA FILES =====
-# Extra safety: exclude CSV files if they exist outside project dirs
+# Data and model artifacts (outside ignored private roots)
 *.csv
-
-# Exclude Excel files (often contain sensitive data)
+*.tsv
 *.xlsx
 *.xls
-!**/example*.xlsx
-!**/template*.xlsx
-
-# ===== PYTHON =====
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-*/.ipynb_checkpoints/*
-
-# Virtual environments
-venv/
-env/
-ENV/
-.venv/
-
-# Python egg files
-*.egg
-*.egg-info/
-dist/
-build/
-
-# ===== ENVIRONMENT & CONFIG =====
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# ===== MODEL ARTIFACTS =====
-# Trained model files (can be large)
+*.parquet
+*.feather
 *.pkl
 *.joblib
 *.h5
 *.pt
 *.pth
 
-# ===== OUTPUTS & TEMPORARY FILES =====
-# Output directories with generated files
+# Archives and backups
+*.zip
+*.tar.gz
+*.rar
+*.bak
+*.backup
+
+# Python and notebooks
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+venv/
+env/
+ENV/
+.venv/
+dist/
+build/
+*.egg
+*.egg-info/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and generated output
+*.log
 outputs/
 temp/
 tmp/
 
-# Log files
-*.log
-
-# ===== KEEP DOCUMENTATION =====
-# Documentation files should be included
-!*.md
-!*.MD
-!README.md
-
-# Keep Jupyter notebooks for demonstration
-!*.ipynb
-
-# Keep Python scripts
-!*.py
-
-# ===== SYSTEM FILES =====
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Linux
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
 *~
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
 
-# ===== GOOGLE DRIVE SPECIFIC =====
-# Google Drive Desktop files
+# Google Drive desktop sidecar files
 *.gdoc
 *.gsheet
 *.gslides
 .tmp.driveupload/
 .tmp.drivedownload/
-
-# ===== PROJECT SPECIFIC =====
-# Archive folders
-Old/
-Archive/
-archive/
-
-# Backup files
-*.bak
-*.backup
-
-# Test data
-test_data/
-sample_data/
-!tests/sample_data/
-
-# Compressed files
-*.zip
-*.tar.gz
-*.rar
-
-# Screenshots (optional - keep if they're documentation)
-# Uncomment to exclude:
-# *.png
-# *.jpg
-# *.jpeg
-
-# ===== PERSONAL FILES =====
-# Resume and local assets
-Korab_Eland_Resume.docx
-image.png

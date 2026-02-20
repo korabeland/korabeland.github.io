@@ -166,11 +166,20 @@
             addDebugLine("measurement id not found");
             return "";
         }
+        // The inline <script> in <head> already calls gtag('js') and
+        // gtag('config').  Only re-issue if that bootstrap is missing
+        // (e.g. the snippet was removed from a page by mistake).
+        // Calling config twice sends a duplicate page_view event.
         if (!window.__portfolioGaConfigured) {
-            window.gtag("js", new Date());
-            window.gtag("config", measurementId);
+            var alreadyBootstrapped = window.dataLayer && window.dataLayer.length > 0;
+            if (!alreadyBootstrapped) {
+                window.gtag("js", new Date());
+                window.gtag("config", measurementId);
+                addDebugLine("configured (bootstrap missing): " + measurementId);
+            } else {
+                addDebugLine("inline bootstrap detected, skipping duplicate config");
+            }
             window.__portfolioGaConfigured = true;
-            addDebugLine("configured: " + measurementId);
         }
         return measurementId;
     }
@@ -417,8 +426,55 @@
             return;
         }
         fireEvent("portfolio_tracker_heartbeat", {
-            tracker_version: "20260220g"
+            tracker_version: "20260220h"
         });
+    }
+
+    function checkGtagLoaded() {
+        if (!debugEnabled) {
+            return;
+        }
+
+        // google_tag_manager is set by gtag.js when it loads and initialises.
+        // If it exists, the real GA pipeline is running and draining dataLayer.
+        var gtagLoaded = !!window.google_tag_manager;
+
+        if (gtagLoaded) {
+            addDebugLine("PASS  gtag.js loaded");
+        } else {
+            addDebugLine("BLOCKED  gtag.js did NOT load");
+            addDebugLine("  -> ad blocker or network block");
+            addDebugLine("  -> events are queued but NOT sent");
+        }
+
+        // Also check whether collect requests are possible by looking for
+        // the measurement-ID container that gtag.js creates.
+        var mid = getMeasurementId();
+        var containerKey = mid ? mid.replace("G-", "G") : "";
+        if (containerKey && window.google_tag_manager && window.google_tag_manager[containerKey]) {
+            addDebugLine("PASS  container " + mid + " active");
+        } else if (mid) {
+            addDebugLine("WARN  container " + mid + " not active");
+        }
+
+        // Report dataLayer queue depth — items sitting here have NOT been
+        // processed yet (or gtag.js is not loaded to consume them).
+        var queueDepth = window.dataLayer ? window.dataLayer.length : 0;
+        addDebugLine("dataLayer depth: " + queueDepth);
+
+        // Schedule a recheck after 3s — gtag.js loads async so it may
+        // arrive after our deferred script runs.
+        window.setTimeout(function () {
+            var loaded = !!window.google_tag_manager;
+            if (!loaded) {
+                addDebugLine("RECHECK  gtag.js still not loaded after 3s");
+                addDebugLine("  -> likely blocked by extension/network");
+            } else if (!gtagLoaded) {
+                // It wasn't loaded before but is now — late arrival.
+                addDebugLine("PASS  gtag.js arrived (late load)");
+                addDebugLine("dataLayer depth: " + (window.dataLayer ? window.dataLayer.length : 0));
+            }
+        }, 3000);
     }
 
     if (debugEnabled) {
@@ -432,4 +488,5 @@
     trackLinkClicks();
     enableDebugMode();
     emitDebugHeartbeat();
+    checkGtagLoaded();
 })();
