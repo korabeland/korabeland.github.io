@@ -85,6 +85,30 @@
         window.gtag("event", name, payload);
     }
 
+    function getMeasurementId() {
+        var gaScript = document.querySelector('script[src*="googletagmanager.com/gtag/js?id="]');
+        if (!gaScript || !gaScript.src) {
+            return "";
+        }
+        try {
+            var srcUrl = new URL(gaScript.src, window.location.href);
+            return srcUrl.searchParams.get("id") || "";
+        } catch (_err) {
+            return "";
+        }
+    }
+
+    function enableDebugMode() {
+        if (!debugEnabled) {
+            return;
+        }
+        var measurementId = getMeasurementId();
+        if (!measurementId) {
+            return;
+        }
+        window.gtag("config", measurementId, { debug_mode: true });
+    }
+
     function getAnchorFromEvent(event) {
         var target = event && event.target;
         if (!target) {
@@ -323,5 +347,6 @@
     trackProjectSession();
     trackCaseStudyReadComplete();
     trackLinkClicks();
+    enableDebugMode();
     emitDebugHeartbeat();
 })();
