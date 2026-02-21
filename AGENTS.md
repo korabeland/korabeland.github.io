@@ -1,8 +1,8 @@
-# AGENTS.md
+# AGENTS.md — Portfolio Site
 
-This file provides guidance to AI coding agents when working with code in this repository.
+This file provides guidance to AI coding agents working on the portfolio site (korabeland.github.io). For brand-level context (positioning, voice, content pillars, collaboration model), see `AGENTS.md` in the parent repo (`Korab's Personal Brand/`).
 
-**User Profile**: Product manager with limited coding experience, actively learning to become more technical.
+**User Profile**: Product manager and strategic operator, actively building with AI. Limited formal coding background but rapidly technical through agent-assisted development.
 
 **Communication Preference**: When writing code or making technical changes, please:
 - Explain the technical architecture and design decisions
@@ -12,9 +12,18 @@ This file provides guidance to AI coding agents when working with code in this r
 
 This aligns with the "Explanatory" output style configured for this project.
 
+## Brand Context
+
+This repo is part of a **hub-and-spoke architecture**:
+- **korabeland.com** ("The Front Door") — personal site, bio, blog, essays
+- **korabeland.github.io** ("The Workshop") — this site, project case studies with thinking and impact
+- **LinkedIn & X** — discovery and distribution
+
+User flow: LinkedIn post → korabeland.com → portfolio page → GitHub repo
+
 ## Repository Purpose
 
-This is a GitHub Pages portfolio site (`korabeland.github.io`) showcasing AI-assisted development projects through agent collaboration. The site features a clean, grayscale design built with vanilla HTML/CSS.
+This is a GitHub Pages portfolio site (`korabeland.github.io`) showcasing AI-assisted development projects through agent collaboration. The site currently features a clean, grayscale design built with vanilla HTML/CSS, with a planned migration to Astro.
 
 ## Deployment
 
@@ -55,17 +64,24 @@ All styling is controlled through CSS custom properties defined in `docs/styles.
 - `AGENTS.md` - This file (agent guidance)
 - `CLAUDE.md` - Pointer file to `AGENTS.md`
 - `README.md` - Public repo overview for visitors
-- `MEMORY.md` - Strategy memory (goals, audience, and conversion priorities)
+- `STRATEGY.md` - Portfolio-specific strategy (purpose, content priorities, Astro migration plan)
 - `docs/README.md` - Technical guide for `docs/` site source
 - `Korab_Eland_Resume.docx` - Professional resume
 
 ### Key Architectural Decisions
 
-1. **No Build Process**: Static HTML/CSS only, no frameworks or preprocessors
+1. **No Build Process** *(current — changing with Astro migration)*: Static HTML/CSS only, no frameworks or preprocessors
 2. **Inline SVG Icons**: Icons are embedded directly in HTML (no external icon libraries)
 3. **CSS Variables for Theming**: All colors, spacing, and layout values use CSS custom properties
 4. **Accessibility-First**: Includes skip link, semantic HTML, focus states, and WCAG-compliant design
 5. **Single Scrollable Page Principle**: Main portfolio (`docs/index.html`) uses anchor-linked sections for core content (About, Projects, Prompt Library, Contact). Detail pages open separately to avoid cluttering the main experience. New sections should be added to the home page as scrollable sections, not separate pages.
+
+### Planned: Astro Migration
+
+This site will be rebuilt on Astro for agent-friendliness and maintainability. See `STRATEGY.md` for migration steps and timeline. During migration:
+- Existing `docs/` content is preserved as the live site until Astro build replaces it
+- New content should follow structured MDX frontmatter conventions (see parent `AGENTS.md`)
+- All accessibility standards, analytics integration, and design conventions carry forward
 
 ### HTML Structure Conventions
 
