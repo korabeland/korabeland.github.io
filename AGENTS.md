@@ -23,235 +23,135 @@ User flow: LinkedIn post → korabeland.com → portfolio page → GitHub repo
 
 ## Repository Purpose
 
-This is a GitHub Pages portfolio site (`korabeland.github.io`) showcasing AI-assisted development projects through agent collaboration. The site currently features a clean, grayscale design built with vanilla HTML/CSS, with a planned migration to Astro.
+This is a GitHub Pages portfolio site (`korabeland.github.io`) showcasing AI-assisted development projects. Built with **Astro** (static site generator) using a component-based architecture.
 
 ## Deployment
 
-This repository deploys directly to GitHub Pages at `https://korabeland.github.io`. Changes pushed to the `main` branch are automatically published.
+Deployed to GitHub Pages at `https://korabeland.github.io` via GitHub Actions. Pushing to `main` triggers an automated build and deploy workflow (`.github/workflows/deploy.yml`).
 
-To preview locally:
 ```bash
-# Open the published site entry point
-open docs/index.html
+# Local development
+npm run dev        # Start dev server with hot reload
+npm run build      # Production build to dist/
+npm run preview    # Preview production build locally
 ```
 
 ## Architecture
 
+### Tech Stack
+
+- **Astro 5.x** — Static site generator, `.astro` component format
+- **TypeScript** — Strict mode (`tsconfig.json` extends `astro/tsconfigs/strict`)
+- **CSS Custom Properties** — Design system in `src/styles/global.css`
+- **GA4 Analytics** — Measurement ID `G-LVJ7FH16ZK`
+
+### File Structure
+
+```
+src/
+├── layouts/
+│   ├── BaseLayout.astro           # Root layout: head, nav, footer, analytics
+│   ├── ProjectLayout.astro        # Case study pages (extends BaseLayout)
+│   ├── PromptCategoryLayout.astro # Prompt library category pages
+│   └── PromptDetailLayout.astro   # Individual prompt detail pages
+├── components/
+│   ├── Analytics.astro            # GA4 snippet (included via BaseLayout)
+│   ├── SkipLink.astro             # Accessibility skip-to-main link
+│   ├── Header.astro               # Nav bar (variant: 'home' | 'subpage')
+│   ├── Footer.astro               # Site footer (variant: 'home' | 'subpage')
+│   ├── ProjectCard.astro          # Reusable project card for grid
+│   └── PromptDownloadCard.astro   # Download-only prompt card
+├── pages/
+│   ├── index.astro                # Homepage (hero, about, projects, prompts, contact)
+│   ├── projects/
+│   │   ├── lead-scoring.astro
+│   │   ├── forecasting.astro
+│   │   └── chatbot-eval.astro
+│   └── prompt-library/
+│       ├── categories/            # 5 category listing pages
+│       └── details/               # Individual prompt detail pages
+└── styles/
+    └── global.css                 # Full design system (CSS custom properties)
+
+public/
+├── assets/
+│   ├── js/analytics-events.js     # GA4 custom event tracking
+│   └── resume/                    # Resume downloads
+└── downloads/                     # Prompt template .md files
+```
+
+### Key Architectural Decisions
+
+1. **Astro Static Output**: Pre-renders all pages to HTML at build time. No client-side JavaScript framework.
+2. **Layout Hierarchy**: `BaseLayout` → specialized layouts (`ProjectLayout`, `PromptCategoryLayout`, `PromptDetailLayout`) → page content via `<slot />`
+3. **Header/Footer Variants**: `variant='home'` uses anchor links (`#about`), `variant='subpage'` uses absolute paths (`/#about`)
+4. **CSS Variables for Theming**: All colors, spacing, and layout values use CSS custom properties in `:root`
+5. **Accessibility-First**: Skip link, semantic HTML, focus states, WCAG AA compliance
+6. **Clean URLs**: Astro generates `page-name/index.html` for directory-based routing (`/projects/lead-scoring/`)
+7. **Inline SVG Icons**: Icons embedded directly in components (no external icon libraries)
+
 ### Design System (CSS Variables)
 
-All styling is controlled through CSS custom properties defined in `docs/styles.css` at `:root`. **Always modify the design system variables rather than hardcoding values:**
+All styling is controlled through CSS custom properties in `src/styles/global.css`:
 
 - **Colors**: `--color-primary`, `--color-secondary`, `--color-tertiary`, etc.
 - **Spacing**: `--spacing-xs` through `--spacing-2xl`
 - **Layout**: `--max-width`
+- **Theme**: Grayscale only (blacks, grays, whites). Don't introduce colors without user approval.
 
-### File Structure
+### Analytics
 
-**Documentation & Deployment:**
-- `docs/index.html` - Single-page portfolio with sections: hero, about, projects, prompt library, contact
-- `docs/styles.css` - All styling with CSS custom properties, organized by component
-- `docs/projects/` - Individual project detail pages
-- `docs/prompt-library/` - Category and detail pages for prompt library (linked from main page)
-
-**Project Management:**
-- `Projects/` - Local project folders and development materials
-- `Prompt Library/` - Local storage of prompt templates and examples
-- `Claude Skills/` - Custom Claude skills and utilities
-
-**Reference & Configuration:**
-- `.claude/` - Claude Code configuration and custom commands
-- `code_review_log.md` - Baseline reference from code review (do not modify)
-- `AGENTS.md` - This file (agent guidance)
-- `CLAUDE.md` - Pointer file to `AGENTS.md`
-- `README.md` - Public repo overview for visitors
-- `STRATEGY.md` - Portfolio-specific strategy (purpose, content priorities, Astro migration plan)
-- `docs/README.md` - Technical guide for `docs/` site source
-- `Korab_Eland_Resume.docx` - Professional resume
-
-### Key Architectural Decisions
-
-1. **No Build Process** *(current — changing with Astro migration)*: Static HTML/CSS only, no frameworks or preprocessors
-2. **Inline SVG Icons**: Icons are embedded directly in HTML (no external icon libraries)
-3. **CSS Variables for Theming**: All colors, spacing, and layout values use CSS custom properties
-4. **Accessibility-First**: Includes skip link, semantic HTML, focus states, and WCAG-compliant design
-5. **Single Scrollable Page Principle**: Main portfolio (`docs/index.html`) uses anchor-linked sections for core content (About, Projects, Prompt Library, Contact). Detail pages open separately to avoid cluttering the main experience. New sections should be added to the home page as scrollable sections, not separate pages.
-
-### Planned: Astro Migration
-
-This site will be rebuilt on Astro for agent-friendliness and maintainability. See `STRATEGY.md` for migration steps and timeline. During migration:
-- Existing `docs/` content is preserved as the live site until Astro build replaces it
-- New content should follow structured MDX frontmatter conventions (see parent `AGENTS.md`)
-- All accessibility standards, analytics integration, and design conventions carry forward
-
-### HTML Structure Conventions
-
-- **Heading Hierarchy**: One `<h1>` per page (in hero section), logo uses `<div>`
-- **Main Content**: Wrapped in `<main id="main">` for skip link target
-- **External Links**: Always include `rel="noopener noreferrer"` for security
-- **SVG Icons**: Use `fill="currentColor"` and `aria-hidden="true"`
-- **Analytics**: Every new `docs/*.html` page must include both in `<head>`:
-  1. GA4 bootstrap snippet with measurement ID `G-LVJ7FH16ZK`
-  2. Shared tracker script: `<script defer src="RELATIVE_PATH_TO/assets/js/analytics-events.js"></script>`
-  The shared tracker emits: `contact_click`, `resume_download`, `linkedin_click`, `github_click`, `project_card_click`, `artifact_open`, `case_study_read_complete`, and `multi_project_session`.
-
-### CSS Organization
-
-Styles are organized in this order:
-1. CSS Custom Properties
-2. Reset & Base Styles
-3. Typography
-4. Layout Containers
-5. Skip Link (Accessibility)
-6. Navigation
-7. Focus States (Accessibility)
-8. Section Styles (Hero, About, Projects, Contact)
-9. Component Styles (Cards, Buttons)
-10. Footer
-11. Responsive Design (@media queries)
+Every page automatically includes GA4 via the `Analytics` component in `BaseLayout`. The shared tracker (`public/assets/js/analytics-events.js`) emits: `contact_click`, `resume_download`, `linkedin_click`, `github_click`, `project_card_click`, `artifact_open`, `case_study_read_complete`, `multi_project_session`.
 
 ## Development Workflow
 
-### Adding New Sections to Home Page
-
-When adding new content to the portfolio (e.g., Prompt Library, Resources, Tools):
-
-1. **Add as scrollable section to `docs/index.html`** - Follow the single scrollable page principle
-2. **Use semantic section structure**:
-   ```html
-   <section id="section-name">
-       <div class="container">
-           <h2>Section Title</h2>
-           <!-- Your content here -->
-       </div>
-   </section>
-   ```
-3. **Update main navigation** - Add anchor link to `<nav>`: `<a href="#section-name">Section Name</a>`
-4. **Reuse existing card styles** - Use `.category-cards-grid` and `.category-card` or `.project-card` patterns
-5. **Keep detail pages separate** - Link to detail/category pages only when content is extensive
-
-**Benefits of this approach:**
-- Faster perceived performance (single page load)
-- Improved navigation experience (smooth scroll anchors)
-- Better SEO (single canonical URL)
-- Reduced cognitive load (one entry point)
-
 ### Adding New Projects
 
-**Quick Start with Slash Command:**
+1. Create `src/pages/projects/{project-name}.astro`
+2. Import and use `ProjectLayout` with props: `title`, `description`, `githubHref`
+3. Add a `ProjectCard` entry to `src/pages/index.astro` in the projects grid
+4. Follow existing case study structure: stat cards → sections → role breakdown → learnings
 
-Run `/create-project-page {project-name}` to automatically generate a new project page. This command:
-- Creates `docs/projects/{project-name}.html` with proper structure and styling
-- Applies consistent branding and layout matching existing projects
-- Includes semantic HTML and accessibility features
-- Integrates with the portfolio design system
+### Adding New Prompt Library Content
 
-**Manual Project Card Addition:**
-
-When adding project cards to `docs/index.html`:
-1. Place inside `.projects-grid` div
-2. Follow existing `.project-card` structure
-3. Do NOT add placeholder `project-meta` divs - only add if you have real tech stack data
-4. Project links should point to `docs/projects/{project-name}.html`
-
-**Project Page Structure:**
-- Use semantic HTML with proper heading hierarchy
-- Include project overview, key metrics, and technical details
-- Link back to main portfolio using navigation
-- Follow the design system variables for consistent styling
-- Test accessibility with keyboard navigation (Tab key)
+**Category page**: Create `src/pages/prompt-library/categories/{name}.astro` using `PromptCategoryLayout`
+**Detail page**: Create `src/pages/prompt-library/details/{category}/{name}.astro` using `PromptDetailLayout`
+**Download-only**: Use `PromptDownloadCard` component within category pages
 
 ### Modifying Styles
 
 1. Check if a CSS variable exists for the value you need
 2. If changing colors/spacing, modify the variable in `:root`
-3. Maintain the grayscale color scheme (blacks, grays, whites)
+3. Maintain the grayscale color scheme
 4. Test focus states after style changes (press Tab to verify)
 
-### Code Review
+### Component Conventions
 
-Run the `/review-portfolio` slash command to analyze code quality, accessibility, and performance. This launches an agent that checks for:
-- Code redundancy and simplification opportunities
-- Accessibility issues (WCAG compliance)
-- Best practices and security
-- Performance optimizations
-
-Results are compared against `code_review_log.md` baseline.
-
-## Custom Slash Commands & Skills
-
-This project includes custom tools to enhance productivity:
-
-### Slash Commands (`.claude/commands/`)
-- **`/create-project-page`** - Automatically generates new project pages with consistent branding and structure
-
-### Available Skills (`.claude/skills/`)
-
-**Portfolio & Career:**
-- Resume Builder - Create and optimize professional resumes
-- Job Search Strategist - Strategic job search guidance and analysis
-- AI Pitch Deck Builder - Build compelling pitch decks for presentations
-
-**Technical Development:**
-- Agentic Development Skill - Patterns for building agent-based systems
-- Prompting Pattern Library - Curated library of effective prompting patterns
-- Vibe Coding - Intuitive approach to code exploration and development
-- Excel Automation Skill - Complex Excel workbook development and automation
-- Excel Editing Skill - Spreadsheet manipulation and analysis
-
-**Learning & Analysis:**
-- Defining Technical Requirements - Elicitation techniques and templates
-- Prompting Pattern Library - Failure modes, model quirks, and orchestration patterns
-- Continual Learning for AI Agents - Frameworks for agent improvement
-- Skill Gap Analyzer - Identify and map skill deficiencies
-- Prompt Optimization Analyzer - Evaluate and improve prompts
-- Meeting Transcript Analyzer - Extract insights from meeting recordings
-
-**Specialized Tools:**
-- Flash Fiction Collaborator - Creative writing collaboration
-- Skill Testing Framework - Validate skill implementations
-- Skill Performance Profiler - Analyze skill execution metrics
-- Skill Dependency Mapper - Map skill relationships
-- Skill Security Analyzer - Evaluate skill security posture
-
-To use a skill, invoke it with the Skill tool in Claude Code.
+- **Props interface**: Define `interface Props {}` in frontmatter for type safety
+- **Slots**: Use `<slot />` for composable content in layouts
+- **`is:inline`**: Use on `<script>` tags that must execute immediately (e.g., analytics)
+- **External links**: Always include `rel="noopener noreferrer"`
 
 ## Git Workflow
 
 ```bash
-# Standard workflow
-git add .
+git add <specific-files>
 git commit -m "Description of changes"
 git push origin main
-
-# Changes will be live on GitHub Pages within minutes
+# GitHub Actions deploys automatically
 ```
 
-## References & Resources
+## References
 
-### Documentation Files
-- **`code_review_log.md`** - Baseline code review findings and recommendations (reference only, do not modify)
-- **`Korab_Eland_Resume.docx`** - Professional resume for job applications
-
-### External Resources
-- **GitHub Pages**: Changes pushed to `main` branch publish automatically
 - **Portfolio URL**: https://korabeland.github.io
-- **Claude Code Docs**: https://docs.claude.com/en/docs/claude-code/
-
-### Accessibility Standards
-- **WCAG AA Compliance**: Minimum standard for all pages
-- **Keyboard Navigation**: Test all features with Tab key
-- **Semantic HTML**: Use proper heading hierarchy and landmarks
-- **Color Contrast**: Maintain sufficient contrast ratios (4.5:1 minimum)
-
-### Portfolio Best Practices
-- Keep project descriptions concise and focused on impact
-- Include metrics where available (performance improvements, user engagement, etc.)
-- Link to relevant repositories or live demos
-- Update regularly with new projects and learnings
+- **Astro Docs**: https://docs.astro.build
+- **WCAG AA**: Minimum accessibility standard for all pages
+- **GA4 Measurement ID**: `G-LVJ7FH16ZK`
 
 ## Important Notes
 
-- **No JavaScript**: This is a CSS-only portfolio. Avoid adding JS unless absolutely necessary.
-- **Grayscale Theme**: The design uses only black/white/gray. Don't introduce colors without user approval.
+- **Grayscale Theme**: Only black/white/gray. Don't introduce colors without user approval.
 - **Accessibility**: Always test keyboard navigation (Tab key) and maintain WCAG AA standards.
-- **Performance**: Keep external dependencies minimal. Avoid adding CDN libraries.
+- **Minimal JS**: Astro ships zero JS by default. Only add client-side JS when truly needed.
+- **Performance**: Keep external dependencies minimal. No CDN libraries.
+- **`docs/` folder**: Legacy static HTML site preserved as reference. Not part of the Astro build.

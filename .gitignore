@@ -1,5 +1,9 @@
 # Portfolio Workspace Ignore Rules
-# Goal: keep publishable website content in `docs/` and keep private workspace content out of commits by default.
+# Goal: keep publishable website content tracked and keep private workspace content out of commits.
+
+# Astro build output and dependencies
+node_modules/
+.astro/
 
 # Private workspace roots (internal tooling, source materials, raw projects)
 # Leading / anchors to repo root so docs/projects/ is NOT ignored on

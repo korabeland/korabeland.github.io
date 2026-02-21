@@ -1,0 +1,24 @@
+---
+interface Props {
+  variant?: 'home' | 'subpage';
+}
+
+const { variant = 'subpage' } = Astro.props;
+const isHome = variant === 'home';
+const logoText = isHome ? 'Korab Eland' : "Korab's AI-Assisted Portfolio";
+const prefix = isHome ? '' : '/';
+---
+<header>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">{logoText}</div>
+            <ul class="nav-links">
+                <li><a href={`${prefix}#about`}>About</a></li>
+                {isHome && <li><a href="#framework">How I Work</a></li>}
+                <li><a href={isHome ? '#projects' : '/#projects'}>Featured Work</a></li>
+                <li><a href={isHome ? '#prompt-library' : '/#prompt-library'}>Prompt Library</a></li>
+                <li><a href={isHome ? '#contact' : '/#contact'}>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>

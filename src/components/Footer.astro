@@ -1,0 +1,15 @@
+---
+interface Props {
+  variant?: 'home' | 'subpage';
+}
+
+const { variant = 'subpage' } = Astro.props;
+const text = variant === 'home'
+  ? '© 2026 Korab Eland. Built as an evolving portfolio and learning record.'
+  : '© 2026 Korab Eland. Built with Claude Code.';
+---
+<footer>
+    <div class="container">
+        <p>{text}</p>
+    </div>
+</footer>

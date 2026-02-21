@@ -1,0 +1,56 @@
+---
+import PromptCategoryLayout from '../../../layouts/PromptCategoryLayout.astro';
+import PromptDownloadCard from '../../../components/PromptDownloadCard.astro';
+---
+<PromptCategoryLayout
+  title="Evaluators"
+  description="Evaluation frameworks for assessing content quality across documents, marketing, and sales using detailed 5-axis scoring."
+  categoryName="Evaluators"
+  categoryDescription="Sophisticated evaluation frameworks for assessing AI-generated content quality. Each evaluator uses a detailed 5-axis scoring framework to provide comprehensive, actionable feedback. Use these to quality-check outputs, identify improvement areas, and set scoring thresholds for your specific needs."
+>
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Content Evaluators (4 prompts)</h2>
+            <div class="prompt-card-grid">
+                <PromptDownloadCard title="Blog Post Quality Evaluator" badge="Evaluator" what="Comprehensive evaluation framework for blog posts using 5 axes: specificity, proof/evidence, positioning, differentiation, and CTA effectiveness." when="Use to evaluate blog posts, identify improvement areas, and ensure content meets quality standards before publishing." downloadHref="/downloads/evaluators/blog-post-quality-evaluator.md" />
+                <PromptDownloadCard title="Landing Page Quality Evaluator" badge="Evaluator" what="Evaluation framework for landing pages assessing value proposition clarity, proof points, objection handling, CTA strength, and visual hierarchy." when="Use to evaluate landing page quality, identify conversion barriers, and improve persuasiveness and clarity." downloadHref="/downloads/evaluators/landing-page-quality-evaluator.md" />
+                <PromptDownloadCard title="Social Media Post Quality Evaluator" badge="Evaluator" what="Framework for evaluating social media posts on hook strength, specificity, novelty/differentiation, engagement factors, and format optimization." when="Use to assess social media content quality, improve engagement potential, and ensure posts meet platform-specific best practices." downloadHref="/downloads/evaluators/social-media-post-quality-evaluator.md" />
+                <PromptDownloadCard title="Video Script Quality Evaluator" badge="Evaluator" what="Evaluation framework for video scripts assessing hook effectiveness, pacing, show-vs-tell balance, clarity, and CTA strength." when="Use to evaluate video scripts before production, improve viewing experience, and ensure message clarity." downloadHref="/downloads/evaluators/video-script-quality-evaluator.md" />
+            </div>
+        </div>
+    </section>
+
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Document Evaluators (3 prompts)</h2>
+            <div class="prompt-card-grid">
+                <PromptDownloadCard title="PRD Quality Evaluator" badge="Evaluator" what="Framework for evaluating PRDs on completeness, testability, scope clarity, decision quality, and dependency identification." when="Use to ensure PRDs are complete, unambiguous, and ready for development without missing requirements or scope creep." downloadHref="/downloads/evaluators/prd-quality-evaluator.md" />
+                <PromptDownloadCard title="Product Description Quality Evaluator" badge="Evaluator" what="Evaluation framework for product descriptions assessing specificity, problem-solution clarity, differentiation, precision, and objection handling." when="Use to ensure product descriptions are compelling, clear about benefits, and address customer concerns effectively." downloadHref="/downloads/evaluators/product-description-quality-evaluator.md" />
+                <PromptDownloadCard title="SEO Content Brief Quality Evaluator" badge="Evaluator" what="Framework for evaluating content briefs on keyword intent alignment, competitive gaps, structure quality, proof points, and differentiation." when="Use to validate content briefs balance SEO requirements with user intent and quality before content creation begins." downloadHref="/downloads/evaluators/seo-content-brief-quality-evaluator.md" />
+            </div>
+        </div>
+    </section>
+
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Marketing & Sales Evaluators (4 prompts)</h2>
+            <div class="prompt-card-grid">
+                <PromptDownloadCard title="Ad Copy Quality Evaluator" badge="Evaluator" what="Framework for evaluating ad copy on benefit clarity, objection anticipation, urgency/scarcity, friction removal, and trust signals." when="Use to improve ad copy quality, identify gaps, and maximize conversion potential before running campaigns." downloadHref="/downloads/evaluators/ad-copy-quality-evaluator.md" />
+                <PromptDownloadCard title="Email Campaign Quality Evaluator" badge="Evaluator" what="Framework for evaluating email campaigns on subject line strength, personalization, value proposition, proof, and friction removal." when="Use to improve email effectiveness, increase open rates and CTR, and ensure campaigns deliver value to subscribers." downloadHref="/downloads/evaluators/email-campaign-quality-evaluator.md" />
+                <PromptDownloadCard title="Sales Outreach Email Quality Evaluator" badge="Evaluator" what="Framework for evaluating sales emails on personalization depth, hypothesis clarity, relevance, value proposition, and ask appropriateness." when="Use to improve sales email response rates and ensure outreach is personalized, relevant, and focused on prospect needs." downloadHref="/downloads/evaluators/sales-outreach-email-quality-evaluator.md" />
+                <PromptDownloadCard title="Pitch Deck Quality Evaluator" badge="Evaluator" what="Framework for evaluating pitch decks on problem-fit clarity, differentiation, proof/traction, commercial viability, and risk mitigation." when="Use to strengthen pitches before investor meetings, ensure compelling narrative, and address investor concerns proactively." downloadHref="/downloads/evaluators/pitch-deck-quality-evaluator.md" />
+            </div>
+        </div>
+    </section>
+
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Framework & Reference (3 files)</h2>
+            <div class="prompt-card-grid">
+                <PromptDownloadCard title="Business Doc Evaluator Principles" badge="Reference" what="Foundation document explaining the philosophy and principles underlying all business document evaluators in this library." when="Use as reference to understand the evaluation framework philosophy and how to adapt evaluators for custom needs." downloadHref="/downloads/evaluators/business-doc-evaluator-principles.md" />
+                <PromptDownloadCard title="Business Doc Evaluator Guide" badge="Guide" what="Instructional guide for using business document evaluators effectively, interpreting scores, and customizing thresholds." when="Use as reference when applying evaluators to understand scoring methodology and how to act on feedback." downloadHref="/downloads/evaluators/business-doc-evaluator-guide.md" />
+                <PromptDownloadCard title="Evaluators Index & Guide" badge="Guide" what="Navigation guide showing all available evaluators, their purpose, and which to use for different content types." when="Use as reference to quickly find the right evaluator for your content type and understand the evaluation framework landscape." downloadHref="/downloads/evaluators/evaluators-index-guide.md" />
+            </div>
+        </div>
+    </section>
+</PromptCategoryLayout>

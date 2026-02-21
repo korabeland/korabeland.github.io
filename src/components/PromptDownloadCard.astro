@@ -1,0 +1,24 @@
+---
+interface Props {
+  title: string;
+  badge: string;
+  what: string;
+  when: string;
+  downloadHref: string;
+}
+
+const { title, badge, what, when, downloadHref } = Astro.props;
+---
+<div class="prompt-card">
+    <div class="prompt-title">{title}</div>
+    <span class="prompt-type-badge">[{badge}]</span>
+    <div class="prompt-use-case">
+        <strong>What:</strong> {what}
+    </div>
+    <div class="prompt-use-case" style="margin-top: 0.5rem;">
+        <strong>When:</strong> {when}
+    </div>
+    <div style="margin-top: 0.75rem;">
+        <a href={downloadHref} class="download-button" download style="display: inline-flex; font-size: 0.9rem;">&#11015;&#65039; Download</a>
+    </div>
+</div>

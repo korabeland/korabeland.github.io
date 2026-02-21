@@ -1,0 +1,38 @@
+---
+import PromptCategoryLayout from '../../../layouts/PromptCategoryLayout.astro';
+import PromptDownloadCard from '../../../components/PromptDownloadCard.astro';
+---
+<PromptCategoryLayout
+  title="Advanced Prompting Techniques"
+  description="Meta-level prompting approaches including reasoning scaffolds, perspective engineering, and self-correction methodologies for sophisticated AI interactions."
+  categoryName="Advanced Prompting Techniques"
+  categoryDescription="Meta-level approaches to prompting including reasoning scaffolds, perspective engineering, and self-correction methodologies. These techniques can be chained together for more sophisticated AI interactions. Use these to unlock deeper reasoning capabilities, validate outputs, and stress-test your prompts for robustness."
+>
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Prompting Templates (8 prompts)</h2>
+            <div class="prompt-card-grid">
+                <PromptDownloadCard title="Chain-of-Thought Structure Template" badge="Template" what="Framework for guiding AI to break down complex reasoning into step-by-step logical chains, making reasoning transparent and improving accuracy through structured analysis." when="Use for complex analysis, multi-step problem solving, or any task where understanding the reasoning process is as important as the final answer." downloadHref="/downloads/advanced-prompting-techniques/chain-of-thought-structure-template.md" />
+                <PromptDownloadCard title="Deliberate Over Instruction" badge="Template" what="Technique for encouraging AI to reason through problems deliberately rather than rushing to execution, improving output quality through thoughtful analysis." when="Use when you need higher quality outputs and want AI to think before acting, especially for strategic or high-stakes decisions." downloadHref="/downloads/advanced-prompting-techniques/deliberate-over-instruction-template.md" />
+                <PromptDownloadCard title="Multi-Persona Prompting" badge="Template" what="Framework for leveraging multiple perspectives and expertise personas in a single prompt to generate richer, more comprehensive outputs." when="Use when you need diverse viewpoints, want to stress-test ideas from multiple angles, or need outputs that synthesize different expertise areas." downloadHref="/downloads/advanced-prompting-techniques/multi-persona-debate-template.md" />
+                <PromptDownloadCard title="Temperature Simulation" badge="Template" what="Meta-prompting technique that simulates different temperature/creativity settings within a single prompt without changing model settings." when="Use to generate outputs at different creativity levels in one interaction, comparing conservative vs. creative approaches without multiple API calls." downloadHref="/downloads/advanced-prompting-techniques/temperature-simulation-template.md" />
+                <PromptDownloadCard title="Pressure Testing" badge="Template" what="Systematic framework for stress-testing AI outputs by introducing constraints, edge cases, and adversarial conditions to reveal weaknesses." when="Use to validate robustness of AI outputs before production use, identify failure modes, and improve prompt reliability." downloadHref="/downloads/advanced-prompting-techniques/pressure-testing-ideas-template.md" />
+                <PromptDownloadCard title="Chain-of-Verification" badge="Template" what="Framework for AI to verify its own reasoning through sequential verification checks, improving factual accuracy and logical consistency." when="Use for fact-sensitive outputs, financial analysis, technical documentation, or any content where accuracy is critical." downloadHref="/downloads/advanced-prompting-techniques/chain-of-verification-template.md" />
+                <PromptDownloadCard title="Adversarial Stress Test" badge="Template" what="Systematic approach to testing AI outputs by having the model intentionally challenge, critique, and try to break its own responses." when="Use to find hidden assumptions, logical gaps, and vulnerabilities in reasoning before deployment or critical use." downloadHref="/downloads/advanced-prompting-techniques/adversarial-stress-test-template.md" />
+                <PromptDownloadCard title="Strategic Edge Case Testing" badge="Template" what="Framework for identifying and testing edge cases strategically based on problem domain, rather than exhaustively covering all possibilities." when="Use to ensure AI outputs handle boundary conditions, corner cases, and unusual scenarios relevant to your specific use case." downloadHref="/downloads/advanced-prompting-techniques/strategic-edge-case-template.md" />
+            </div>
+        </div>
+    </section>
+
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Prompting Methodologies (4 prompts)</h2>
+            <div class="prompt-card-grid">
+                <PromptDownloadCard title="Reverse Prompting" badge="Methodology" what="Meta-technique for optimizing prompts by working backward from desired outputs to identify requirements, constraints, and implicit instructions needed." when="Use when iterating on prompts to make them more precise, or when trying to understand what makes certain outputs work well." downloadHref="/downloads/advanced-prompting-techniques/reverse-prompting-template.md" />
+                <PromptDownloadCard title="Recursive Optimisation" badge="Methodology" what="Iterative refinement framework that feeds evaluation feedback back into prompts to progressively improve outputs over multiple rounds." when="Use when you need to achieve high-quality outputs through iterative improvement, testing each refinement against evaluation criteria." downloadHref="/downloads/advanced-prompting-techniques/recursive-optimisation-template.md" />
+                <PromptDownloadCard title="Meta-Prompting" badge="Methodology" what="Advanced technique for prompting the AI to generate and refine its own prompts, creating self-improving prompt systems." when="Use to automate prompt optimization, generate variations, or explore the prompt engineering space systematically." downloadHref="/downloads/advanced-prompting-techniques/meta-prompting-guide.md" />
+                <PromptDownloadCard title="Reasoning Scaffolds" badge="Methodology" what="Framework for structuring AI reasoning by providing explicit scaffolds that guide the model through complex cognitive tasks." when="Use for complex problem-solving, multi-step analysis, or any task requiring structured reasoning through interconnected concepts." downloadHref="/downloads/advanced-prompting-techniques/reasoning-scaffolds-guide.md" />
+            </div>
+        </div>
+    </section>
+</PromptCategoryLayout>

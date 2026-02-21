@@ -1,0 +1,52 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  promptName: string;
+  promptType: string;
+  categoryName: string;
+  categoryHref: string;
+  downloadHref: string;
+  downloadLabel: string;
+}
+
+const { title, description, promptName, promptType, categoryName, categoryHref, downloadHref, downloadLabel } = Astro.props;
+---
+<BaseLayout title={`${title} - Prompt Library`} description={description}>
+    <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/#prompt-library">Prompt Library</a>
+        <span class="breadcrumb-separator" aria-hidden="true">/</span>
+        <a href={categoryHref}>{categoryName}</a>
+        <span class="breadcrumb-separator" aria-hidden="true">/</span>
+        <span aria-current="page">{promptName}</span>
+    </nav>
+
+    <section class="prompt-detail-header">
+        <div class="container">
+            <h1>{promptName}</h1>
+            <span class="prompt-type-indicator">[{promptType}]</span>
+        </div>
+    </section>
+
+    <slot />
+
+    <section class="download-section">
+        <div class="container">
+            <h2>Get This Prompt</h2>
+            <p>Download and use this prompt template in your own work:</p>
+            <div class="download-options">
+                <a href={downloadHref} class="download-button" download>&#11015;&#65039; {downloadLabel}</a>
+            </div>
+        </div>
+    </section>
+
+    <nav class="prompt-navigation">
+        <div class="container">
+            <a href={categoryHref} class="back-link">&larr; Back to {categoryName}</a>
+            <a href="/#prompt-library" class="back-link">&larr; Back to Prompt Library</a>
+            <a href="/" class="back-link">&larr; Home</a>
+        </div>
+    </nav>
+</BaseLayout>

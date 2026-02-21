@@ -1,0 +1,99 @@
+---
+import PromptCategoryLayout from '../../../layouts/PromptCategoryLayout.astro';
+import PromptDownloadCard from '../../../components/PromptDownloadCard.astro';
+---
+<PromptCategoryLayout
+  title="Document Templates"
+  description="Professional document templates for PRDs, SOPs, proposals, strategic documents, and technical content."
+  categoryName="Document Templates"
+  categoryDescription="Essential prompts and tools for creating professional documents. From product requirements to strategic proposals, this category covers structured frameworks for important business communications, reports, and technical content. Each template includes quality checks and structure guidance to ensure completeness and clarity."
+>
+    <section class="prompt-type-section">
+        <div class="container">
+            <h2>Templates (10 prompts)</h2>
+            <div class="prompt-card-grid">
+                <a href="/prompt-library/details/document-templates/prd-template/" class="prompt-card">
+                    <div class="prompt-title">Product Requirements Document</div>
+                    <span class="prompt-type-badge">[Template]</span>
+                    <div class="prompt-use-case">Define product scope, goals, and success metrics to align teams on objectives.</div>
+                </a>
+
+                <a href="/prompt-library/details/document-templates/sop-template/" class="prompt-card">
+                    <div class="prompt-title">Standard Operating Procedure</div>
+                    <span class="prompt-type-badge">[Template]</span>
+                    <div class="prompt-use-case">Document step-by-step processes with clear roles, prerequisites, and edge case handling.</div>
+                </a>
+
+                <a href="/prompt-library/details/document-templates/post-mortem-template/" class="prompt-card">
+                    <div class="prompt-title">Blameless Post-Mortem</div>
+                    <span class="prompt-type-badge">[Template]</span>
+                    <div class="prompt-use-case">Analyze incidents with a blameless framework focused on learning and prevention.</div>
+                </a>
+
+                <PromptDownloadCard
+                    title="Executive Brief / Decision Memo"
+                    badge="Template"
+                    what="One-page executive summary format for presenting decisions, strategic initiatives, or key information to leadership. Includes sections for context, recommendation, and next steps."
+                    when="Use when you need to communicate strategic decisions, request leadership approval, or summarize complex proposals for executive review."
+                    downloadHref="/downloads/document-templates/executive-brief-decision-memo-template.md"
+                />
+
+                <PromptDownloadCard
+                    title="Project Proposal"
+                    badge="Template"
+                    what="Comprehensive project proposal framework covering scope, timeline, resources, risks, and success criteria. Structured to address stakeholder concerns systematically."
+                    when="Use when proposing new initiatives, requesting budget, or planning major undertakings that need stakeholder buy-in and clarity."
+                    downloadHref="/downloads/document-templates/project-proposal-template.md"
+                />
+
+                <PromptDownloadCard
+                    title="Status Report Generator"
+                    badge="Template"
+                    what="System prompt that transforms project updates into professional status reports formatted for presentation to stakeholders and leadership."
+                    when="Use to generate consistent, professional-quality status reports from raw project notes or meeting discussions quickly."
+                    downloadHref="/downloads/document-templates/status-report-generator.md"
+                />
+
+                <PromptDownloadCard
+                    title="Campaign Results Reporter"
+                    badge="Template"
+                    what="System prompt that converts marketing campaign analytics into compelling narrative reports with insights and recommendations."
+                    when="Use to transform raw campaign metrics into executive-ready reports that tell the story of campaign performance."
+                    downloadHref="/downloads/document-templates/campaign-results-reporter.md"
+                />
+
+                <PromptDownloadCard
+                    title="Financial Storyteller"
+                    badge="Template"
+                    what="System prompt that transforms financial data and metrics into narrative-driven presentations for stakeholders and board meetings."
+                    when="Use to generate compelling financial narratives from raw numbers, making complex financial information accessible and persuasive."
+                    downloadHref="/downloads/document-templates/financial-storyteller.md"
+                />
+
+                <PromptDownloadCard
+                    title="Competitive Battle Card Deck"
+                    badge="Template"
+                    what="System prompt that generates competitive intelligence battle cards—structured comparisons showing your differentiators against competitors."
+                    when="Use to create battle cards for sales teams and competitive positioning—turning competitive research into actionable insights."
+                    downloadHref="/downloads/document-templates/competitive-battle-card-deck.md"
+                />
+
+                <PromptDownloadCard
+                    title="Technical Documentation Guide"
+                    badge="Guide"
+                    what="Reference guide explaining best practices for writing technical documentation that is clear, comprehensive, and user-friendly."
+                    when="Use as a reference when writing technical docs, API references, or system documentation to ensure clarity and completeness."
+                    downloadHref="/downloads/document-templates/technical-documentation-guide.md"
+                />
+
+                <PromptDownloadCard
+                    title="SEO Content Brief Guide"
+                    badge="Guide"
+                    what="Reference guide for creating SEO-optimized content briefs that balance keyword strategy with user intent and readability."
+                    when="Use when creating content briefs to ensure content strategy aligns with SEO goals while maintaining quality and user value."
+                    downloadHref="/downloads/document-templates/seo-content-brief-guide.md"
+                />
+            </div>
+        </div>
+    </section>
+</PromptCategoryLayout>

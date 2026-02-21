@@ -1,0 +1,35 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  categoryName: string;
+  categoryDescription: string;
+}
+
+const { title, description, categoryName, categoryDescription } = Astro.props;
+---
+<BaseLayout title={`${title} - Prompt Library`} description={description}>
+    <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/#prompt-library">Prompt Library</a>
+        <span class="breadcrumb-separator" aria-hidden="true">/</span>
+        <span aria-current="page">{categoryName}</span>
+    </nav>
+
+    <section class="category-header">
+        <div class="container">
+            <h1>{categoryName}</h1>
+            <p>{categoryDescription}</p>
+        </div>
+    </section>
+
+    <slot />
+
+    <nav class="prompt-navigation">
+        <div class="container">
+            <a href="/#prompt-library" class="back-link">&larr; Back to Prompt Library</a>
+            <a href="/" class="back-link">&larr; Home</a>
+        </div>
+    </nav>
+</BaseLayout>

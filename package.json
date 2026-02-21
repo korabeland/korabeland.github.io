@@ -1,0 +1,25 @@
+{
+  "name": "portfolio-site",
+  "version": "1.0.0",
+  "description": "Korab Eland's portfolio site — korabeland.github.io",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/korabeland/korabeland.github.io.git"
+  },
+  "author": "Korab Eland",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/korabeland/korabeland.github.io/issues"
+  },
+  "homepage": "https://korabeland.github.io",
+  "dependencies": {
+    "astro": "^5.17.3"
+  }
+}

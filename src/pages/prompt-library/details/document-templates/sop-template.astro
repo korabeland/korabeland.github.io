@@ -1,0 +1,134 @@
+---
+import PromptDetailLayout from '../../../../layouts/PromptDetailLayout.astro';
+---
+<PromptDetailLayout
+  title="Standard Operating Procedure Template"
+  description="Guide for creating SOPs that enable consistent process execution across teams with clear steps, decision points, and edge case handling."
+  promptName="Standard Operating Procedure"
+  promptType="Template"
+  categoryName="Document Templates"
+  categoryHref="/prompt-library/categories/document-templates/"
+  downloadHref="/downloads/document-templates/sop-template.md"
+  downloadLabel="Download SOP Template"
+>
+    <section class="prompt-content">
+        <div class="container">
+            <h2>What is this prompt?</h2>
+            <p>A comprehensive template for creating Standard Operating Procedures (SOPs) that enable anyone—regardless of experience—to execute repeatable processes consistently and correctly. This prompt generates SOPs with clear scope, explicit decision points, edge case handling, quality checks, and troubleshooting guidance.</p>
+
+            <h2>When to use it</h2>
+            <p>Use this prompt when documenting operational processes that multiple people execute, such as customer onboarding, data entry procedures, quality checks, or incident response workflows. SOPs prevent knowledge loss, enable scaling, and ensure consistency across your organization.</p>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2>Why This Prompt Works (Principle Annotations)</h2>
+
+            <h3>Principle 1 (Purpose)</h3>
+            <p><strong>"Enables someone to execute a repeatable process consistently and correctly"</strong> — SOPs exist to ensure consistency and quality when multiple people execute the same process.</p>
+
+            <h3>Principle 2 (Structure as Logic)</h3>
+            <p><strong>Purpose → Scope → Roles → Prerequisites → Steps → Edge Cases → Quality Checks → Troubleshooting → Metadata</strong></p>
+
+            <h3>Principle 3 (Constraints)</h3>
+            <ul>
+                <li><strong>1200 words</strong> allows comprehensive coverage of edge cases</li>
+                <li><strong>"Must state what this does NOT cover"</strong> prevents wrong procedure being used</li>
+                <li><strong>"Each step must have verb and expected outcome"</strong> makes steps executable</li>
+                <li><strong>"IF/THEN/ELSE format"</strong> eliminates ambiguity in decisions</li>
+                <li><strong>"DO NOT make steps dependent on tribal knowledge"</strong> ensures transferability</li>
+            </ul>
+
+            <h3>Principle 5 (Failure Modes)</h3>
+            <p>This prompt addresses how SOPs typically fail:</p>
+            <ul>
+                <li>Assumes tribal knowledge (only experts can follow it)</li>
+                <li>Missing scope boundaries (used for wrong situations)</li>
+                <li>Vague steps (no clear action or success criteria)</li>
+                <li>No edge case handling (breaks when reality differs from happy path)</li>
+                <li>No quality verification (can't tell if done correctly)</li>
+                <li>Outdated (no owner or review schedule)</li>
+            </ul>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2>How to Customize This Prompt</h2>
+
+            <h3>For your process maturity</h3>
+            <ul>
+                <li><strong>Early-stage process:</strong> Add section "Known Issues" for things you know are broken but haven't fixed</li>
+                <li><strong>Mature process:</strong> Add section "Process Metrics" showing cycle time, error rate, completion rate</li>
+                <li><strong>Regulated process:</strong> Add section "Compliance Requirements" with specific regulations/audits</li>
+                <li><strong>Critical process:</strong> Add section "Escalation Path" for when things go wrong</li>
+            </ul>
+
+            <h3>For different process types</h3>
+            <ul>
+                <li><strong>Customer-facing:</strong> Add section "Customer Communication Templates" for key messages</li>
+                <li><strong>Data processes:</strong> Add section "Data Quality Checks" separate from general quality checks</li>
+                <li><strong>Financial processes:</strong> Add section "Audit Trail" showing what must be documented</li>
+                <li><strong>Security processes:</strong> Add section "Security Considerations" with specific controls</li>
+            </ul>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2>Common Mistake: Assuming Tribal Knowledge</h2>
+
+            <h3>The Problem</h3>
+            <p>SOPs include phrases like "configure the settings as usual" or "use the standard process." These assume the reader already knows what "usual" or "standard" means.</p>
+
+            <h3>How This Prompt Prevents It</h3>
+            <ul>
+                <li>"DO NOT make steps dependent on tribal knowledge" constraint</li>
+                <li>Quality check: "No step relies on 'knowing how we usually do this'"</li>
+                <li>Tone: "Assume reader is executing this for the first time"</li>
+            </ul>
+
+            <h3>The Right Approach</h3>
+            <p><strong>Instead of:</strong> "Configure the settings as usual"</p>
+            <p><strong>Write:</strong> "In admin panel > Account Settings, set: SSO to Disabled, User seats to 25, Integrations to Standard Enterprise bundle (Salesforce, Slack, API access)"</p>
+        </div>
+    </section>
+
+    <section class="prompt-template-preview">
+        <div class="container">
+            <h2>The SOP Template</h2>
+            <p>Copy and paste this template directly into Claude to get started:</p>
+            <div class="template-content">
+                <h3>You are writing a standard operating procedure that enables someone to execute a repeatable process consistently and correctly.</h3>
+                <h4>CONTEXT:</h4>
+                <p><strong>Process name:</strong> [WHAT PROCESS THIS DOCUMENTS]</p>
+                <p><strong>Process owner:</strong> [WHO MAINTAINS THIS PROCESS]</p>
+                <p><strong>Who executes this:</strong> [ROLE/TEAM WHO DOES THIS WORK]</p>
+                <p><strong>Frequency:</strong> [HOW OFTEN THIS RUNS]</p>
+                <p><strong>Why this matters:</strong> [IMPACT IF DONE WRONG]</p>
+                <h4>INPUT PROVIDED:</h4>
+                <p>[PASTE YOUR CURRENT PROCESS STEPS, TOOLS USED, DECISION POINTS, EDGE CASES, EXAMPLES HERE]</p>
+                <h4>REQUIRED STRUCTURE:</h4>
+                <ol>
+                    <li><strong>Purpose</strong> (Why this process exists - 2 sentences)</li>
+                    <li><strong>Scope</strong> (When to use this SOP vs. when NOT to use it)</li>
+                    <li><strong>Roles & Responsibilities</strong></li>
+                    <li><strong>Prerequisites</strong> (Access, tools, information needed)</li>
+                    <li><strong>Step-by-Step Procedure</strong> (Numbered steps with decision points)</li>
+                    <li><strong>Edge Cases</strong> (5 most common variations)</li>
+                    <li><strong>Quality Checks</strong></li>
+                    <li><strong>Troubleshooting</strong></li>
+                    <li><strong>Process Metadata</strong> (Owner, last updated, review schedule)</li>
+                </ol>
+                <h4>CONSTRAINTS:</h4>
+                <ul>
+                    <li>Total length: 1200 words maximum</li>
+                    <li>Each step must have a verb (action) and expected outcome</li>
+                    <li>Decision points: IF/THEN/ELSE format</li>
+                    <li>DO NOT make steps dependent on tribal knowledge</li>
+                </ul>
+                <h4>TONE:</h4>
+                <ul>
+                    <li>Instructional and precise, not conversational</li>
+                    <li>Use imperative voice</li>
+                    <li>Assume reader is executing this for the first time</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</PromptDetailLayout>

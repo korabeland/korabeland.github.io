@@ -1,0 +1,127 @@
+---
+import PromptDetailLayout from '../../../../layouts/PromptDetailLayout.astro';
+---
+<PromptDetailLayout
+  title="Blameless Post-Mortem Template"
+  description="Guide for creating blameless post-mortems that focus on learning and systems improvements rather than individual blame."
+  promptName="Blameless Post-Mortem"
+  promptType="Template"
+  categoryName="Document Templates"
+  categoryHref="/prompt-library/categories/document-templates/"
+  downloadHref="/downloads/document-templates/post-mortem-template.md"
+  downloadLabel="Download Post-Mortem Template"
+>
+    <section class="prompt-content">
+        <div class="container">
+            <h2>What is this prompt?</h2>
+            <p>A comprehensive template for writing blameless post-mortems that focus on organizational learning rather than individual blame. This prompt generates incident reports with detailed timelines, root cause analysis, quantified impact, actionable improvements, and systems-focused language that builds psychological safety while ensuring honest incident review.</p>
+
+            <h2>When to use it</h2>
+            <p>Use this prompt after significant incidents, outages, or failures to understand what happened, why systems allowed it, and what changes prevent recurrence. Blameless post-mortems create psychological safety—people report issues honestly because they know the focus is learning, not punishment.</p>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2>Why This Prompt Works (Principle Annotations)</h2>
+
+            <h3>Principle 1 (Purpose)</h3>
+            <p><strong>"Helps the organization learn from this incident"</strong> — Post-mortems exist to prevent recurrence, not to assign blame.</p>
+
+            <h3>Principle 2 (Structure as Logic)</h3>
+            <p><strong>Summary → Timeline → Root Cause → Impact → What Worked → What Failed → Actions</strong></p>
+
+            <h3>Principle 3 (Constraints)</h3>
+            <ul>
+                <li><strong>800 words</strong> forces focus on essential learnings</li>
+                <li><strong>"Must use actual timestamps"</strong> grounds timeline in facts</li>
+                <li><strong>"Root cause must go deeper than trigger"</strong> prevents shallow analysis</li>
+                <li><strong>"Must focus on systems not people"</strong> enforces blameless culture</li>
+                <li><strong>"Action items must have owner and date"</strong> ensures follow-through</li>
+            </ul>
+
+            <h3>Principle 5 (Failure Modes)</h3>
+            <p>This prompt addresses how post-mortems typically fail:</p>
+            <ul>
+                <li>Blame individuals instead of systems</li>
+                <li>Surface-level root cause ("the server crashed" vs "we had no circuit breaker")</li>
+                <li>Vague impact ("several users affected")</li>
+                <li>Timeline without specific times</li>
+                <li>Action items without owners (nothing gets fixed)</li>
+            </ul>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2>How to Customize This Prompt</h2>
+
+            <h3>For your incident management process</h3>
+            <ul>
+                <li><strong>If you use incident levels:</strong> Add "Severity Level" section with your org's definitions</li>
+                <li><strong>If you track SLOs:</strong> Add "SLO Impact" section showing which SLOs were breached</li>
+                <li><strong>If you do incident reviews:</strong> Add "Review Date" and "Attendees" at top</li>
+            </ul>
+
+            <h3>For different incident types</h3>
+            <ul>
+                <li><strong>Security incidents:</strong> Add sections: "Attack Vector", "Data Exposure", "Remediation Steps"</li>
+                <li><strong>Data incidents:</strong> Add sections: "Data Affected", "Data Recovery", "Data Quality Impact"</li>
+                <li><strong>Customer-facing incidents:</strong> Add sections: "Customer Communications", "Support Ticket Volume"</li>
+            </ul>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2>Common Mistake: Blaming People Instead of Systems</h2>
+
+            <h3>The Problem</h3>
+            <p>Post-mortems include language like "John forgot to set up monitoring" or "Sarah should have noticed the disk filling." This destroys psychological safety and prevents honest incident reports in the future.</p>
+
+            <h3>The Right Reframe</h3>
+            <p><strong>Instead of:</strong> "John forgot to set up monitoring"</p>
+            <p><strong>Write:</strong> "We had no disk usage monitoring on gateway instances"</p>
+            <p><strong>Instead of:</strong> "Sarah should have noticed the disk filling"</p>
+            <p><strong>Write:</strong> "We lacked alerting that would have caught this before outage"</p>
+            <p>The question isn't "who messed up"—it's "what systemic gap allowed this to happen."</p>
+        </div>
+    </section>
+
+    <section class="prompt-template-preview">
+        <div class="container">
+            <h2>The Post-Mortem Template</h2>
+            <p>Copy and paste this template directly into Claude to get started:</p>
+            <div class="template-content">
+                <h3>You are writing a post-mortem that documents what happened, why it happened, and how to prevent it from happening again.</h3>
+                <h4>CONTEXT:</h4>
+                <p><strong>Incident name:</strong> [BRIEF DESCRIPTION]</p>
+                <p><strong>Date/time of incident:</strong> [WHEN THIS OCCURRED]</p>
+                <p><strong>Severity:</strong> [IMPACT LEVEL]</p>
+                <p><strong>Affected systems/users:</strong> [WHAT/WHO WAS IMPACTED]</p>
+                <p><strong>Team involved:</strong> [WHO RESPONDED]</p>
+                <h4>INPUT PROVIDED:</h4>
+                <p>[PASTE YOUR TIMELINE, MONITORING DATA, SLACK LOGS, ROOT CAUSE ANALYSIS HERE]</p>
+                <h4>REQUIRED STRUCTURE:</h4>
+                <ol>
+                    <li><strong>Summary</strong> (What happened in 2-3 sentences)</li>
+                    <li><strong>Timeline</strong> (Chronological events with actual timestamps)</li>
+                    <li><strong>Root Cause</strong> (The actual underlying reason, not just the trigger)</li>
+                    <li><strong>Impact</strong> (Quantified user/business impact)</li>
+                    <li><strong>What Went Well</strong> (Specific actions that worked)</li>
+                    <li><strong>What Went Poorly</strong> (Systems/process failures - never individuals)</li>
+                    <li><strong>Action Items</strong> (Specific fixes with owners and deadlines)</li>
+                </ol>
+                <h4>CONSTRAINTS:</h4>
+                <ul>
+                    <li>Total length: 800 words maximum</li>
+                    <li>Root cause must go deeper than surface trigger</li>
+                    <li>Impact must use actual numbers from monitoring</li>
+                    <li>Action items must have owner name and date</li>
+                    <li>DO NOT blame: Focus on system failures, not people failures</li>
+                    <li>DO NOT sugarcoat: If something was broken, say it was broken</li>
+                </ul>
+                <h4>TONE:</h4>
+                <ul>
+                    <li>Factual and learning-oriented, not defensive or blame-seeking</li>
+                    <li>Systems-focused ("We lacked redundancy") not people-focused</li>
+                    <li>Action-oriented in fixes, not just analysis</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</PromptDetailLayout>

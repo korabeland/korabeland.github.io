@@ -1,0 +1,24 @@
+---
+interface Props {
+  title: string;
+  status: string;
+  impact: string;
+  description: string;
+  tags: string[];
+  href: string;
+}
+
+const { title, status, impact, description, tags, href } = Astro.props;
+---
+<div class="project-card">
+    <div class="status-badge">{status}</div>
+    <h3>{title}</h3>
+    <p class="project-impact">{impact}</p>
+    <p>{description}</p>
+    <div class="project-meta">
+        {tags.map((tag) => <span>{tag}</span>)}
+    </div>
+    <div class="project-links">
+        <a href={href} class="btn">Read Case Study</a>
+    </div>
+</div>
