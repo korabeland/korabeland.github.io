@@ -8,7 +8,7 @@ node_modules/
 # Private workspace roots (internal tooling, source materials, raw projects)
 # Leading / anchors to repo root so docs/projects/ is NOT ignored on
 # case-insensitive filesystems (Windows).
-/.claude/
+# Note: /.claude/ removed — skills and agents are tracked in the repo
 /Projects/
 /Prompt Library/
 /Claude Skills/
