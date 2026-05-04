@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const notes = await getCollection('notes');
+const sorted = notes.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const recent = sorted.slice(0, 3);
 ---
 <BaseLayout
   title="Korab Eland | Portfolio"
@@ -85,47 +90,37 @@ import ProjectCard from '../components/ProjectCard.astro';
         </div>
     </section>
 
-    <section id="prompt-library">
+    <section id="notes">
         <div class="container">
-            <h2>Prompt Library</h2>
-            <p class="section-intro">A supporting library of prompts and frameworks I use while building, testing, and communicating project work.</p>
-
-            <div class="category-cards-grid">
-                <a href="/prompt-library/categories/document-templates/" class="category-card">
-                    <h3>Document Templates</h3>
-                    <span class="category-count">13 Prompts</span>
-                    <p class="category-description">Reusable prompts for briefs, plans, requirements, and strategic documents.</p>
-                </a>
-
-                <a href="/prompt-library/categories/presentations/" class="category-card">
-                    <h3>Presentations</h3>
-                    <span class="category-count">11 Prompts</span>
-                    <p class="category-description">Frameworks for product storytelling, narrative structure, and presentation systems.</p>
-                </a>
-
-                <a href="/prompt-library/categories/evaluators/" class="category-card">
-                    <h3>Evaluators</h3>
-                    <span class="category-count">19 Prompts</span>
-                    <p class="category-description">Quality evaluation rubrics used to improve prompt outputs systematically.</p>
-                </a>
-
-                <a href="/prompt-library/categories/advanced-prompting-techniques/" class="category-card">
-                    <h3>Advanced Prompting Techniques</h3>
-                    <span class="category-count">14 Prompts</span>
-                    <p class="category-description">Reasoning scaffolds and validation techniques for complex tasks.</p>
-                </a>
-
-                <a href="/prompt-library/categories/reference-workflows/" class="category-card">
-                    <h3>Reference Workflows</h3>
-                    <span class="category-count">2 Prompts</span>
-                    <p class="category-description">Multi-step sequences for repeatable AI-assisted workflows.</p>
-                </a>
-            </div>
+            <h2>Field Notes</h2>
+            {recent.length > 0 ? (
+                <>
+                    <p class="section-intro">Recent thinking, decisions, and lessons learned.</p>
+                    <div class="notes-grid">
+                        {recent.map((note) => (
+                            <article class="note-card">
+                                <time class="note-date" datetime={note.data.date.toISOString().split('T')[0]}>
+                                    {note.data.date.toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                </time>
+                                <h3><a href={`/notes/${note.slug}/`}>{note.data.title}</a></h3>
+                                {note.data.tags && note.data.tags.length > 0 && (
+                                    <div class="note-tags">
+                                        {note.data.tags.map((tag) => <span>{tag}</span>)}
+                                    </div>
+                                )}
+                                {note.data.excerpt && <p class="note-excerpt">{note.data.excerpt}</p>}
+                            </article>
+                        ))}
+                    </div>
+                    <a href="/notes/" class="btn btn-ghost" style={{ marginTop: 'var(--spacing-lg)' }}>View All Notes</a>
+                </>
+            ) : (
+                <p class="section-intro">No notes yet. Check back soon.</p>
+            )}
         </div>
     </section>
 
     <section id="contact">
-        <div class="container">
             <h2>Contact</h2>
             <p class="section-intro">If anything here resonates, feel free to reach out.</p>
             <div class="contact-links">

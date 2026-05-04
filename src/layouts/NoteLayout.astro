@@ -1,0 +1,42 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  noteTitle: string;
+  date: string;
+  tags?: string[];
+}
+
+const { title, description, noteTitle, date, tags = [] } = Astro.props;
+---
+
+<BaseLayout title={`${noteTitle} — Field Notes`} description={description}>
+    <nav class="breadcrumb container" aria-label="Breadcrumb">
+        <a href="/notes/">Field Notes</a>
+        <span class="breadcrumb-separator" aria-hidden="true">/</span>
+        <span aria-current="page">{noteTitle}</span>
+    </nav>
+
+    <section class="note-header">
+        <div class="container">
+            <h1>{noteTitle}</h1>
+            <time class="note-date" datetime={date}>{new Date(date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            {tags.length > 0 && (
+                <div class="note-tags">
+                    {tags.map((tag) => <span>{tag}</span>)}
+                </div>
+            )}
+        </div>
+    </section>
+
+    <slot />
+
+    <nav class="note-navigation">
+        <div class="container">
+            <a href="/notes/" class="back-link">&larr; Back to Field Notes</a>
+            <a href="/" class="back-link">&larr; Home</a>
+        </div>
+    </nav>
+</BaseLayout>
