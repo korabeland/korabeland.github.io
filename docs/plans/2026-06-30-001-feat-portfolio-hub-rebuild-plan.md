@@ -1,6 +1,6 @@
 ---
 date: 2026-06-30
-status: active
+status: completed
 type: feat
 depth: deep
 target_repo: portfolio-site (korabeland.github.io)
