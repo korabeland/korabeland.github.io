@@ -22,15 +22,17 @@ npm run preview    # Preview production build
 2. **Layout hierarchy** — BaseLayout -> specialized layouts -> page content via `<slot />`
 3. **Header/Footer variants** — `variant='home'` uses anchor links, `variant='subpage'` uses absolute paths
 4. **CSS variables for theming** — all colors, spacing, layout values in `:root`
-5. **Grayscale only** — black/white/gray. Don't introduce colors without Korab's approval.
+5. **Warm-terminal design system** — dark-first, warm amber-on-near-black, oversized Space Grotesk + JetBrains Mono. See `DESIGN.md`. (Supersedes the old grayscale-only system; the redesign is tracked in `docs/brainstorms/portfolio-hub-redesign-requirements.md`.)
 6. **Accessibility-first** — skip link, semantic HTML, focus states, WCAG AA minimum
 
 ## Design System
 
-CSS custom properties in `src/styles/global.css`:
-- Colors: `--color-primary`, `--color-secondary`, `--color-tertiary`
-- Spacing: `--spacing-xs` through `--spacing-2xl`
-- Layout: `--max-width`
+**Always read `DESIGN.md` before any visual or UI work.** It is the source of truth for
+typography, color tokens (light + dark), spacing, layout, decoration, and a11y. Do not
+deviate without Korab's approval. In QA, flag any code that doesn't match `DESIGN.md`.
+
+The current `src/styles/global.css` still reflects the *old* grayscale system — it will be
+replaced when the warm-terminal redesign is implemented.
 
 ## Adding Content
 
