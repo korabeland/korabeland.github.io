@@ -27,6 +27,8 @@
     "@rollup/rollup-darwin-arm64": "^4.60.2"
   },
   "devDependencies": {
-    "vitest": "^4.1.9"
+    "js-yaml": "^4.1.1",
+    "vitest": "^4.1.9",
+    "zod": "^3.25.76"
   }
 }
