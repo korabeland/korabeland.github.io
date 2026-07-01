@@ -1,0 +1,101 @@
+# Scheduled watchdog: scans korabeland's public GitHub repos for new,
+# includable projects (see scripts/scan-repos.ts) and opens one PR per
+# newly-detected repo proposing a project card.
+#
+# Cadence: every Monday at 09:00 UTC (start-of-week check-in). Also
+# runnable on demand via workflow_dispatch for manual/dry-run testing.
+#
+# IMPORTANT: PR titles MUST exactly match `Add project card: {slug}`.
+# scripts/scan-repos.ts dedups against already-open watchdog PRs by
+# checking for this exact title prefix (PR_TITLE_PREFIX) via `gh pr list`.
+# Any drift here silently breaks that dedup and causes repeat proposals.
+
+name: Watchdog — scan for new projects
+
+"on":
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  scan-and-propose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run watchdog scan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx tsx scripts/scan-repos.ts
+
+      - name: Check for new project cards
+        id: check
+        run: |
+          if [ -z "$(git status --porcelain src/content/projects/)" ]; then
+            echo "No new project cards — nothing to propose this run."
+            echo "has_new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open one PR per new project card
+        if: steps.check.outputs.has_new == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          base_branch="${GITHUB_REF_NAME}"
+
+          git status --porcelain src/content/projects/ | cut -c4- | while IFS= read -r file; do
+            slug=$(basename "$file" .md)
+            branch="watchdog/${slug}"
+
+            echo "Proposing card for slug: ${slug}"
+
+            git checkout -q -b "$branch" "$base_branch"
+            git add "$file"
+            git commit -q -m "Add project card: ${slug}"
+            git push -q -u origin "$branch"
+
+            body_file="$(mktemp)"
+            cat > "$body_file" <<EOF
+          Watchdog detected a new public repo and drafted a project card for it: \`${slug}\`.
+
+          **What happens when you close this PR matters — read before you act.**
+
+          - **Merge as-is** → the card goes live immediately on the next deploy (\`deploy.yml\` runs on every push to \`main\`). The \`hook\` field currently holds the GitHub repo description as a placeholder — consider rewriting it in your voice before merging, though it's not required for the merge to work.
+          - **Edit \`status: live\` to \`status: skipped\`, then merge** → records a permanent skip. The file stays committed under \`src/content/projects/\` as a denylist entry (per R13), so this repo will never be re-proposed on a future run, regardless of its \`status\` value.
+          - **Close this PR without merging** → there is no committed record of the rejection, so this repo will likely be re-proposed the next time the watchdog runs.
+
+          This PR was opened automatically by \`.github/workflows/watchdog.yml\` via \`scripts/scan-repos.ts\`.
+          EOF
+
+            gh pr create \
+              --base "$base_branch" \
+              --head "$branch" \
+              --title "Add project card: ${slug}" \
+              --body-file "$body_file"
+
+            rm -f "$body_file"
+            git checkout -q "$base_branch"
+          done
