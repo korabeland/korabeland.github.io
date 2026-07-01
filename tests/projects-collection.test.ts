@@ -48,11 +48,15 @@ describe('projects collection schema', () => {
   it('defaults status to "live" when omitted, and accepts "skipped"', () => {
     const omitted = projectSchema.safeParse(validFixture);
     expect(omitted.success).toBe(true);
-    expect(omitted.data.status).toBe('live');
+    if (omitted.success) {
+      expect(omitted.data.status).toBe('live');
+    }
 
     const skipped = projectSchema.safeParse({ ...validFixture, status: 'skipped' });
     expect(skipped.success).toBe(true);
-    expect(skipped.data.status).toBe('skipped');
+    if (skipped.success) {
+      expect(skipped.data.status).toBe('skipped');
+    }
 
     const invalidStatus = projectSchema.safeParse({ ...validFixture, status: 'archived' });
     expect(invalidStatus.success).toBe(false);
@@ -69,9 +73,11 @@ describe('projects collection schema', () => {
   it('treats language, last_push, and order as optional', () => {
     const result = projectSchema.safeParse(validFixture);
     expect(result.success).toBe(true);
-    expect(result.data.language).toBeUndefined();
-    expect(result.data.last_push).toBeUndefined();
-    expect(result.data.order).toBeUndefined();
+    if (result.success) {
+      expect(result.data.language).toBeUndefined();
+      expect(result.data.last_push).toBeUndefined();
+      expect(result.data.order).toBeUndefined();
+    }
   });
 });
 
@@ -88,7 +94,9 @@ describe('projects seed content', () => {
     for (const entry of entries) {
       const result = projectSchema.safeParse(entry.data);
       expect(result.success, `${entry.file} failed schema validation: ${JSON.stringify(result.error?.issues)}`).toBe(true);
-      expect(result.data.status).toBe('live');
+      if (result.success) {
+        expect(result.data.status).toBe('live');
+      }
     }
   });
 

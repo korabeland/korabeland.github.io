@@ -54,6 +54,15 @@ Each project on the hub is one file: `src/content/projects/{slug}.md`, validated
 - **Korab's review of that PR:** merge as-is to publish (ideally after rewriting `hook` in voice); edit `status: live` → `status: skipped` and merge to permanently skip (denylist); close without merging to leave it open for re-proposal next run (no committed record either way).
 - Build-time GitHub metadata (`language`, `last_push` per repo, live-project count, freshest-push date) is separate from the cards themselves — see `scripts/enrich-projects.ts`, which writes a gitignored `src/data/github-meta.json` on `predev`/`prebuild`, falling back to the committed `src/data/github-meta.seed.json` if the API is unreachable. The footer's "synced from github" line reads this via `src/lib/github-meta.ts`.
 
+**Doing any of this from a CLI/agent session instead of the GitHub web UI:**
+```bash
+gh workflow run watchdog.yml                     # trigger a manual scan
+gh pr merge <branch> --squash                    # merge as-is: publish
+# ...or edit status: live -> status: skipped, commit, push, then:
+gh pr merge <branch> --squash                    # merge with skip: denylist
+gh pr close <branch>                              # close without merging: leave for re-proposal
+```
+
 ## Component Conventions
 
 - Define `interface Props {}` in frontmatter for type safety
@@ -64,7 +73,7 @@ Each project on the hub is one file: `src/content/projects/{slug}.md`, validated
 
 ## Analytics
 
-GA4 included on every page via `Analytics` component in `BaseLayout`. Custom events: `contact_click`, `resume_download`, `linkedin_click`, `github_click`, `multi_project_session`. (`project_card_click`, `case_study_read_complete`, and `artifact_open` were removed with the case-study/prompt-library pages they tracked.)
+GA4 included on every page via `Analytics` component in `BaseLayout`. Custom events: `contact_click`, `resume_download`, `linkedin_click`, `github_click`. (`project_card_click`, `case_study_read_complete`, `artifact_open`, and `multi_project_session` were removed — all four tracked multi-page/case-study behavior that a single-page hub can no longer produce.)
 
 ## Important Notes
 

@@ -12,7 +12,10 @@ const total = liveProjects.length;
 ---
 <div class="project-list">
     {total === 0 ? (
-        <p class="project-list__empty">More projects coming soon.</p>
+        // Not "coming soon" — R6/AE4 explicitly rule out placeholder/
+        // coming-soon copy for the curated set (only live public repos may
+        // appear). This is a genuine empty-list state, not a placeholder.
+        <p class="project-list__empty">No projects live yet.</p>
     ) : (
         liveProjects.map((project, i) => (
             <ProjectRow

@@ -85,11 +85,6 @@
         }
     }
 
-    function getSlugFromPath(pagePath) {
-        var match = pagePath.match(/\/([^/]+)\.html$/i);
-        return match ? match[1] : "unknown";
-    }
-
     function inferLocation(el) {
         if (el.closest("header")) {
             return "header";
@@ -259,41 +254,6 @@
         window.setTimeout(navigate, 300);
     }
 
-    function trackProjectSession() {
-        if (pageType !== "project") {
-            return;
-        }
-
-        var slug = getSlugFromPath(path);
-        var viewedProjects = [];
-        var sessionKey = "portfolio_projects_viewed";
-        var firedKey = "portfolio_multi_project_fired";
-
-        try {
-            var raw = sessionStorage.getItem(sessionKey);
-            viewedProjects = raw ? JSON.parse(raw) : [];
-        } catch (_err) {
-            viewedProjects = [];
-        }
-
-        if (!Array.isArray(viewedProjects)) {
-            viewedProjects = [];
-        }
-
-        if (viewedProjects.indexOf(slug) === -1) {
-            viewedProjects.push(slug);
-            sessionStorage.setItem(sessionKey, JSON.stringify(viewedProjects));
-        }
-
-        if (viewedProjects.length >= 2 && !sessionStorage.getItem(firedKey)) {
-            fireEvent("multi_project_session", {
-                project_count: viewedProjects.length,
-                project_slug: slug
-            });
-            sessionStorage.setItem(firedKey, "1");
-        }
-    }
-
     function trackLinkClicks() {
         document.addEventListener(
             "click",
@@ -416,7 +376,6 @@
     }
 
     ensureBaseConfig();
-    trackProjectSession();
     trackLinkClicks();
     enableDebugMode();
     emitDebugHeartbeat();

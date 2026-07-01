@@ -7,6 +7,7 @@ import {
   computeFreshestPush,
   countLiveProjects,
   fetchRepoMeta,
+  getLiveRepoSlugs,
 } from '../scripts/enrich-projects';
 
 /** Builds a fake `fetch` that resolves per-slug per the provided map. */
@@ -132,6 +133,29 @@ describe('countLiveProjects', () => {
 
   it('returns 0 when the directory does not exist, without throwing', () => {
     expect(countLiveProjects('/nonexistent/path/does-not-exist')).toBe(0);
+  });
+});
+
+describe('getLiveRepoSlugs', () => {
+  it('returns the slug of every live entry, not a hardcoded list', () => {
+    const dir = makeProjectsDir(['live', undefined, 'live']);
+    // makeProjectsDir names files project-{i}.md with slug: "p{i}" — proves
+    // the slugs come from reading the directory, not a fixed array, since
+    // these values ("p0", "p1", "p2") don't match any real repo.
+    expect(getLiveRepoSlugs(dir).sort()).toEqual(['p0', 'p1', 'p2']);
+  });
+
+  it('excludes skipped entries', () => {
+    const dir = makeProjectsDir(['live', 'skipped', 'live']);
+    expect(getLiveRepoSlugs(dir).sort()).toEqual(['p0', 'p2']);
+  });
+
+  it('picks up a project added after the fact — proves enrichment stays in sync as the watchdog grows the collection', () => {
+    const dir = makeProjectsDir(['live']);
+    expect(getLiveRepoSlugs(dir)).toEqual(['p0']);
+
+    writeFileSync(path.join(dir, 'watchdog-added.md'), '---\nname: "new"\nslug: "watchdog-added"\nstatus: "live"\n---\n', 'utf8');
+    expect(getLiveRepoSlugs(dir).sort()).toEqual(['p0', 'watchdog-added']);
   });
 });
 

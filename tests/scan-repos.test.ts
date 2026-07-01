@@ -1,15 +1,27 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import type { execFileSync } from 'node:child_process';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  fetchPublicRepos,
   filterNewRepos,
   isIncludable,
   readExistingSlugs,
+  readOpenWatchdogPrSlugs,
   slugify,
   toCardFile,
   type GitHubRepo,
 } from '../scripts/scan-repos';
+import { parseFrontmatter } from '../src/lib/project-files';
+
+/** Builds a fake execFileSync (injected, per readOpenWatchdogPrSlugs's execImpl parameter). */
+function fakeExec(result: { stdout?: string; throws?: boolean }): typeof execFileSync {
+  return vi.fn(() => {
+    if (result.throws) throw new Error('simulated: gh command failed');
+    return result.stdout ?? '';
+  }) as unknown as typeof execFileSync;
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectsDir = path.join(__dirname, '..', 'src', 'content', 'projects');
@@ -302,6 +314,100 @@ describe('readExistingSlugs', () => {
   });
 });
 
+describe('readOpenWatchdogPrSlugs', () => {
+  it('extracts the slug from PR titles matching the exact "Add project card: {slug}" prefix', () => {
+    const exec = fakeExec({ stdout: 'Add project card: some-new-tool\nAdd project card: another-tool\n' });
+    const slugs = readOpenWatchdogPrSlugs(exec);
+    expect(slugs).toEqual(new Set(['some-new-tool', 'another-tool']));
+  });
+
+  it('ignores open PRs whose title does not match the watchdog prefix', () => {
+    const exec = fakeExec({ stdout: 'Add project card: real-one\nfix: unrelated bug\nAdd project card: real-two\n' });
+    const slugs = readOpenWatchdogPrSlugs(exec);
+    expect(slugs).toEqual(new Set(['real-one', 'real-two']));
+  });
+
+  it('returns an empty set when there are no open PRs at all', () => {
+    const exec = fakeExec({ stdout: '' });
+    expect(readOpenWatchdogPrSlugs(exec).size).toBe(0);
+  });
+
+  it('returns an empty set (not a throw) when gh itself fails — e.g. not installed, not authenticated, or a transient API error', () => {
+    const exec = fakeExec({ throws: true });
+    const slugs = readOpenWatchdogPrSlugs(exec);
+    expect(slugs.size).toBe(0);
+  });
+});
+
+describe('fetchPublicRepos', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  function mockFetchJson(pages: unknown[][]) {
+    let call = 0;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        const body = pages[call] ?? [];
+        call += 1;
+        return { ok: true, json: async () => body } as Response;
+      })
+    );
+  }
+
+  it('drops entries missing a usable name field, keeps well-formed ones', async () => {
+    mockFetchJson([
+      [
+        { name: 'good-repo', fork: false, archived: false, private: false, size: 10, description: 'x', language: 'Python' },
+        { name: '', fork: false, archived: false, private: false, size: 10, description: 'x', language: 'Python' },
+        { fork: false, archived: false, private: false, size: 10, description: 'x', language: 'Python' },
+      ],
+    ]);
+    const repos = await fetchPublicRepos();
+    expect(repos).toEqual([
+      { name: 'good-repo', fork: false, archived: false, private: false, size: 10, description: 'x', language: 'Python' },
+    ]);
+  });
+
+  it('defaults malformed/missing fork, archived, private, and size fields to whichever value isIncludable() excludes on', async () => {
+    mockFetchJson([[{ name: 'malformed-repo' }]]);
+    const [repo] = await fetchPublicRepos();
+    expect(repo).toEqual({
+      name: 'malformed-repo',
+      fork: true,
+      archived: true,
+      private: true,
+      size: 0,
+      description: null,
+      language: null,
+    });
+    // Every default above independently causes isIncludable() to exclude —
+    // the whole point of defaulting this way for a curation tool.
+    expect(isIncludable(repo)).toBe(false);
+  });
+
+  it('throws when the API returns a non-array body, instead of silently proceeding with no repos', async () => {
+    mockFetchJson([]);
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ message: 'rate limited' }) }) as Response));
+    await expect(fetchPublicRepos()).rejects.toThrow('non-array');
+  });
+
+  it('paginates using the raw page size, not the post-filter count, so a page containing malformed entries does not stop pagination early', async () => {
+    const fullPageWithOneMalformed = Array.from({ length: 100 }, (_, i) =>
+      i === 0
+        ? { noNameField: true }
+        : { name: `repo-${i}`, fork: false, archived: false, private: false, size: 10, description: null, language: null }
+    );
+    mockFetchJson([fullPageWithOneMalformed, [{ name: 'second-page-repo', fork: false, archived: false, private: false, size: 10, description: null, language: null }]]);
+    const repos = await fetchPublicRepos();
+    // 99 well-formed from page 1 (one dropped) + 1 from page 2 — proves
+    // page 2 was actually fetched despite page 1's filtered length being 99, not 100.
+    expect(repos).toHaveLength(100);
+    expect(repos.some((r) => r.name === 'second-page-repo')).toBe(true);
+  });
+});
+
 describe('toCardFile', () => {
   it('escapes double quotes in the hook so the frontmatter stays valid YAML', () => {
     const candidate = {
@@ -319,6 +425,35 @@ describe('toCardFile', () => {
     const candidate = { name: 'no-lang-repo', slug: 'no-lang-repo', hook: 'No detected language.', language: null };
     const fileContents = toCardFile(candidate);
     expect(fileContents).toContain('tech: []');
+  });
+
+  it('escapes a literal backslash in the hook so the frontmatter stays valid YAML', () => {
+    const candidate = {
+      name: 'backslash-repo',
+      slug: 'backslash-repo',
+      hook: 'Path: C:\\Users\\test',
+      language: 'Python',
+    };
+
+    const fileContents = toCardFile(candidate);
+    // Round-trips through the real parser rather than asserting on the raw
+    // escaped string — proves the frontmatter is valid YAML AND that the
+    // parsed value matches the original, not just that *some* escaping happened.
+    const { data } = parseFrontmatter(fileContents);
+    expect(data.hook).toBe(candidate.hook);
+  });
+
+  it('round-trips a hook containing both quotes and backslashes', () => {
+    const candidate = {
+      name: 'mixed-repo',
+      slug: 'mixed-repo',
+      hook: 'He said \\"hi\\" from C:\\temp',
+      language: 'Python',
+    };
+
+    const fileContents = toCardFile(candidate);
+    const { data } = parseFrontmatter(fileContents);
+    expect(data.hook).toBe(candidate.hook);
   });
 });
 

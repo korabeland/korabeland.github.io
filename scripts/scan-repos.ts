@@ -23,6 +23,12 @@ import { githubApiHeaders } from '../src/lib/github-api';
 const REPO_OWNER = 'korabeland';
 const SITE_REPO_NAMES = new Set(['korabeland.github.io', 'korabeland.com']);
 const PR_TITLE_PREFIX = 'Add project card: ';
+// A hang (network accepted, response never sent) is not a rejection on its
+// own, so it wouldn't otherwise surface as an error — a timeout turns it
+// into a normal fetch/exec failure instead of blocking the watchdog job
+// indefinitely (up to GitHub Actions' 6-hour default job ceiling).
+const FETCH_TIMEOUT_MS = 10_000;
+const EXEC_TIMEOUT_MS = 10_000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECTS_DIR = path.join(__dirname, '..', 'src', 'content', 'projects');
@@ -90,7 +96,7 @@ export function filterNewRepos(
   existingSlugs: Set<string>,
   openPrSlugs: Set<string>
 ): RepoCandidate[] {
-  return allRepos
+  const candidates = allRepos
     .filter(isIncludable)
     .map((repo) => ({
       name: repo.name,
@@ -99,6 +105,24 @@ export function filterNewRepos(
       language: repo.language,
     }))
     .filter((candidate) => !existingSlugs.has(candidate.slug) && !openPrSlugs.has(candidate.slug));
+
+  // Two different repo names can slugify to the same value (e.g. `my.tool`
+  // and `my-tool` both become `my-tool`). Writing both as {slug}.md would
+  // silently clobber one with the other. Drop every candidate involved in a
+  // same-batch collision rather than guessing which one "wins" — a human
+  // can add the dropped repo(s) by hand or wait for a follow-up run once
+  // the ambiguity is resolved (e.g. one repo renamed).
+  const slugCounts = new Map<string, number>();
+  for (const candidate of candidates) {
+    slugCounts.set(candidate.slug, (slugCounts.get(candidate.slug) ?? 0) + 1);
+  }
+  const collisions = [...slugCounts.entries()].filter(([, count]) => count > 1).map(([slug]) => slug);
+  if (collisions.length > 0) {
+    console.warn(
+      `scan-repos: slug collision(s) detected in this batch, dropping affected candidates: ${collisions.join(', ')}`
+    );
+  }
+  return candidates.filter((candidate) => !collisions.includes(candidate.slug));
 }
 
 /**
@@ -108,7 +132,13 @@ export function filterNewRepos(
  * files look identical to human-authored ones.
  */
 export function toCardFile(candidate: RepoCandidate): string {
-  const hook = candidate.hook.replace(/"/g, '\\"');
+  // Escape backslashes before quotes: inside a double-quoted YAML scalar,
+  // backslash is itself the escape character, so a repo description
+  // containing one (e.g. "Path: C:\Users\x") would otherwise silently
+  // corrupt the frontmatter — `\U` isn't a valid YAML escape and `\t`
+  // would become a literal tab, desyncing the parsed value from the
+  // source text without raising an error at write time.
+  const hook = candidate.hook.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
   const tech = candidate.language ? [candidate.language] : [];
   const techLine = `[${tech.map((t) => `"${t}"`).join(', ')}]`;
   const lines = [
@@ -137,15 +167,25 @@ export function readExistingSlugs(projectsDir: string): Set<string> {
   return slugs;
 }
 
-/** Fetches the slugs of repos that already have an open watchdog PR, via `gh pr list`. */
-export function readOpenWatchdogPrSlugs(): Set<string> {
+/**
+ * Fetches the slugs of repos that already have an open watchdog PR, via
+ * `gh pr list`. `execImpl` is injectable (mirrors fetchRepoMeta's
+ * `fetchImpl` parameter elsewhere in this file) so this is unit-testable
+ * without actually shelling out to `gh` — mocking `execFileSync` as a
+ * module import proved unreliable across this file/test-file boundary,
+ * so dependency injection is the pattern this codebase already uses for
+ * exactly this problem.
+ */
+export function readOpenWatchdogPrSlugs(
+  execImpl: typeof execFileSync = execFileSync
+): Set<string> {
   const slugs = new Set<string>();
   let stdout: string;
   try {
-    stdout = execFileSync(
+    stdout = execImpl(
       'gh',
       ['pr', 'list', '--state', 'open', '--json', 'title', '--jq', '.[].title'],
-      { encoding: 'utf-8' }
+      { encoding: 'utf-8', timeout: EXEC_TIMEOUT_MS }
     );
   } catch (err) {
     console.warn('scan-repos: could not list open PRs via gh, proceeding with no open-PR slugs known:', err);
@@ -159,6 +199,31 @@ export function readOpenWatchdogPrSlugs(): Set<string> {
   return slugs;
 }
 
+/**
+ * Normalizes one raw GitHub API repo object into GitHubRepo, or null to drop
+ * it if `name` — the one field nothing downstream can function without —
+ * isn't a usable string. For the boolean/size filter fields, a
+ * missing/malformed value defaults to whichever value isIncludable()
+ * treats as "exclude" (fork/archived/private: true, size: 0): if the API
+ * ever returns a field we don't expect, the safe failure mode for a
+ * curation tool is to leave the repo out, not to silently include
+ * something a real value would have excluded.
+ */
+function normalizeRepo(raw: unknown): GitHubRepo | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const r = raw as Record<string, unknown>;
+  if (typeof r.name !== 'string' || !r.name) return null;
+  return {
+    name: r.name,
+    fork: typeof r.fork === 'boolean' ? r.fork : true,
+    archived: typeof r.archived === 'boolean' ? r.archived : true,
+    private: typeof r.private === 'boolean' ? r.private : true,
+    size: typeof r.size === 'number' ? r.size : 0,
+    description: typeof r.description === 'string' ? r.description : null,
+    language: typeof r.language === 'string' ? r.language : null,
+  };
+}
+
 /** Fetches all public, non-fork-filtered repo listing for REPO_OWNER via the GitHub REST API. */
 export async function fetchPublicRepos(): Promise<GitHubRepo[]> {
   const repos: GitHubRepo[] = [];
@@ -167,14 +232,18 @@ export async function fetchPublicRepos(): Promise<GitHubRepo[]> {
   for (;;) {
     const res = await fetch(
       `https://api.github.com/users/${REPO_OWNER}/repos?type=public&per_page=100&page=${page}`,
-      { headers }
+      { headers, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }
     );
     if (!res.ok) {
       throw new Error(`GitHub API request failed: ${res.status} ${res.statusText}`);
     }
-    const batch = (await res.json()) as GitHubRepo[];
+    const rawBatch = await res.json();
+    if (!Array.isArray(rawBatch)) {
+      throw new Error('GitHub API returned a non-array repo list');
+    }
+    const batch = rawBatch.map(normalizeRepo).filter((repo): repo is GitHubRepo => repo !== null);
     repos.push(...batch);
-    if (batch.length < 100) break;
+    if (rawBatch.length < 100) break;
     page += 1;
   }
   return repos;

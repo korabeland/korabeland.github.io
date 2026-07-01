@@ -13,11 +13,19 @@ const outDir = resolve(repoRoot, 'src/data');
 const outFile = resolve(outDir, 'github-meta.json');
 const seedFile = resolve(outDir, 'github-meta.seed.json');
 
-// The three live seed repos this build enriches. Kept as a plain list (not
-// derived from the GitHub API) because the enrichment target is "the repos
-// we already curate," not "everything on the account."
-const LIVE_REPO_SLUGS = ['perian', 'perian-jobsearch', 'fantasy-baseball-drafter'];
 const GITHUB_OWNER = 'korabeland';
+
+/**
+ * Live-project entries read directly from the content collection on disk —
+ * never a hardcoded list. A hardcoded list would silently stop enriching
+ * new cards the watchdog (scripts/scan-repos.ts) adds over time: this
+ * script has no other way to learn about a newly-merged card, so deriving
+ * from the same source countLiveProjects() already reads is the only way
+ * enrichment keeps up with the collection it's meant to enrich.
+ */
+function readLiveProjects(dir: string = projectsDir) {
+  return readProjectFiles(dir).filter((entry) => (entry.data.status ?? 'live') === 'live');
+}
 
 /**
  * Counts live projects directly from the content collection on disk. This is
@@ -25,8 +33,22 @@ const GITHUB_OWNER = 'korabeland';
  * GitHub or invented separately.
  */
 export function countLiveProjects(dir: string = projectsDir): number {
-  return readProjectFiles(dir).filter((entry) => (entry.data.status ?? 'live') === 'live').length;
+  return readLiveProjects(dir).length;
 }
+
+/** Slugs of every live project, read from the collection (see readLiveProjects). Falls back to the filename stem if a card's `slug` field is missing/non-string. */
+export function getLiveRepoSlugs(dir: string = projectsDir): string[] {
+  return readLiveProjects(dir).map((entry) => {
+    const slug = entry.data.slug;
+    return typeof slug === 'string' && slug.trim() ? slug.trim() : entry.file.replace(/\.md$/, '');
+  });
+}
+
+// A hang (connection accepted, response never sent) isn't a rejection, so
+// the existing try/catch below wouldn't catch it on its own — an
+// AbortSignal timeout turns a hang into the same "fetch failed" path the
+// catch already handles, keeping the "never block the build" guarantee.
+const FETCH_TIMEOUT_MS = 10_000;
 
 /** Fetches `{ language, pushed_at }` for one repo. Returns null on any failure. */
 export async function fetchRepoMeta(
@@ -36,6 +58,7 @@ export async function fetchRepoMeta(
   try {
     const response = await fetchImpl(`https://api.github.com/repos/${GITHUB_OWNER}/${slug}`, {
       headers: githubApiHeaders(),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
 
     if (!response.ok) return null;
@@ -82,14 +105,15 @@ export function computeFreshestPush(repos: Record<string, RepoMeta>): string | n
 export async function buildGithubMeta(
   fetchImpl: typeof fetch = fetch,
   liveProjectCount: number = countLiveProjects(),
+  liveRepoSlugs: string[] = getLiveRepoSlugs(),
 ): Promise<GithubMetaFile> {
   const seed = readSeed();
   const repos: Record<string, RepoMeta> = {};
 
   // Independent per-repo fetches — no data dependency between them, so run
-  // concurrently rather than serializing 3x the network latency.
+  // concurrently rather than serializing Nx the network latency.
   const fetchedBySlug = await Promise.all(
-    LIVE_REPO_SLUGS.map(async (slug) => [slug, await fetchRepoMeta(slug, fetchImpl)] as const),
+    liveRepoSlugs.map(async (slug) => [slug, await fetchRepoMeta(slug, fetchImpl)] as const),
   );
 
   for (const [slug, fetched] of fetchedBySlug) {

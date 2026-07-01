@@ -21,6 +21,14 @@ permissions:
   contents: write
   pull-requests: write
 
+# Two workflow_dispatch runs in quick succession would otherwise both see
+# the same "not yet proposed" state and could open duplicate PRs for the
+# same repo before either run's PR lands. One run at a time; queue rather
+# than cancel, since a scan run should always be allowed to finish cleanly.
+concurrency:
+  group: watchdog
+  cancel-in-progress: false
+
 jobs:
   scan-and-propose:
     runs-on: ubuntu-latest
@@ -65,7 +73,12 @@ jobs:
           set -euo pipefail
 
           base_branch="${GITHUB_REF_NAME}"
+          failures_file="$(mktemp)"
 
+          # NOTE: this `while` runs as the last stage of a pipe, so bash runs
+          # it in a subshell — a plain shell variable set inside the loop
+          # (e.g. a failure counter) would be lost the moment the loop ends.
+          # `failures_file` sidesteps that by tracking state on disk instead.
           git status --porcelain src/content/projects/ | cut -c4- | while IFS= read -r file; do
             slug=$(basename "$file" .md)
             branch="watchdog/${slug}"
@@ -90,12 +103,39 @@ jobs:
           This PR was opened automatically by \`.github/workflows/watchdog.yml\` via \`scripts/scan-repos.ts\`.
           EOF
 
-            gh pr create \
+            # A push already landed the branch (and its card) on origin
+            # before this point — gh pr create needs the remote branch to
+            # exist to open a PR against it, so this ordering is required.
+            # If it fails here, the pushed branch would otherwise sit
+            # unmerged forever: the next run's dedup only checks main
+            # (readExistingSlugs) and open PRs (readOpenWatchdogPrSlugs), so
+            # neither sees an orphaned branch with no PR — the next attempt
+            # for this slug would then hit a non-fast-forward push rejection
+            # against the leftover branch and fail every time after. Clean
+            # up on failure so the slug can be proposed again next run, and
+            # keep processing the remaining slugs in this run instead of
+            # aborting the whole batch over one bad one.
+            if gh pr create \
               --base "$base_branch" \
               --head "$branch" \
               --title "Add project card: ${slug}" \
-              --body-file "$body_file"
+              --body-file "$body_file"; then
+              rm -f "$body_file"
+            else
+              echo "::error::gh pr create failed for ${slug} — deleting the orphaned branch so it can be retried next run"
+              git push -q --delete origin "$branch" || true
+              rm -f "$body_file"
+              git checkout -q "$base_branch"
+              echo "$slug" >> "$failures_file"
+              continue
+            fi
 
-            rm -f "$body_file"
             git checkout -q "$base_branch"
           done
+
+          if [ -s "$failures_file" ]; then
+            echo "::error::Failed to propose card(s) for: $(paste -sd, "$failures_file")"
+            rm -f "$failures_file"
+            exit 1
+          fi
+          rm -f "$failures_file"
