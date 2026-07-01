@@ -1,22 +1,31 @@
-# Korab Eland | Portfolio
+# Korab Eland | Project Hub
 
 Live site: `https://korabeland.github.io`
 
-This repository powers my portfolio site and showcases case studies built with AI-assisted workflows.
-Current focus: documenting practical project work across CX, analytics, and product-adjacent decision making.
+A curated, self-updating index of what I actually build — a numbered list of public GitHub
+repos, each linking straight to the repo. No case studies or write-ups on this site; depth
+lives in the repo READMEs. korabeland.github.io is the proof-of-building layer; the fuller
+picture — who I am, how I think, what I'm writing — is at
+[korabeland.com](https://korabeland.com).
 
-## What To Explore
-- `docs/index.html` for homepage narrative and conversion flow
-- `docs/projects/lead-scoring.html` for ROI-oriented case study
-- `docs/projects/forecasting.html` for planning and forecasting systems work
-- `docs/projects/chatbot-eval.html` for research and evaluation framework work
+## How it stays current
+
+The hub doesn't get hand-edited when I ship something new. A scheduled GitHub Action
+(`.github/workflows/watchdog.yml`) scans my public repos weekly, and opens a pull request
+proposing a card for anything genuinely new (excluding forks and the site repos themselves).
+Merging the PR publishes it; see `CLAUDE.md`'s "Watchdog" section for the full flow.
 
 ## Site Architecture
-- Public website source: `docs/`
-- Supporting case-study pages: `docs/projects/`
-- Prompt library pages and downloads: `docs/prompt-library/`
+
+- Astro 5, static output, single page (`src/pages/index.astro`)
+- Projects are a content collection (`src/content/projects/`), not hand-authored markup —
+  one file per repo, schema-validated
+- `DESIGN.md` is the design-system source of truth ("warm terminal": dark-default, amber
+  accent, Space Grotesk + General Sans + JetBrains Mono)
+- Deploys to GitHub Pages via GitHub Actions on every push to `main`
 
 ## Contact
+
 - Email: `korabeland@gmail.com`
 - LinkedIn: `https://www.linkedin.com/in/korabeland`
 - GitHub: `https://github.com/korabeland`
