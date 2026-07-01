@@ -9,10 +9,9 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
-  variant?: 'home' | 'subpage';
 }
 
-const { title, description, variant = 'subpage' } = Astro.props;
+const { title, description } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -59,11 +58,11 @@ const { title, description, variant = 'subpage' } = Astro.props;
 </head>
 <body>
     <SkipLink />
-    <Header variant={variant} />
+    <Header />
     <ThemeToggle class="theme-toggle--fixed" />
     <main id="main">
         <slot />
     </main>
-    <Footer variant={variant} />
+    <Footer />
 </body>
 </html>

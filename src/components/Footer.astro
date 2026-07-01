@@ -1,15 +1,79 @@
 ---
-interface Props {
-  variant?: 'home' | 'subpage';
+// Single-page hub: no subpages remain after U4's deletions, so there is only
+// one footer variant.
+//
+// "Synced from github" flourish (DESIGN.md "Layout: Footer" + "The Technical
+// Flourish"): reads U5's build-time-generated src/data/github-meta.json, with
+// a defensive fallback to the committed seed if the generated file is
+// missing (e.g. the prebuild hook was skipped). A dynamic Node `fs` read
+// wrapped in try/catch, not a static ES `import` of the generated file —
+// importing it directly would hard-fail the build whenever the prebuild step
+// didn't run, which defeats the point of having a fallback. Date-formatting
+// and load-with-fallback logic live in src/lib/github-meta.ts so they're
+// unit-testable (tests/github-meta.test.ts).
+//
+// Path resolution uses process.cwd(), not import.meta.url: Astro bundles this
+// component's script into dist/chunks/ during `astro build`, so
+// import.meta.url resolves to the bundled chunk's output location, not this
+// source file's location — a relative `../data` from there points outside
+// dist/ entirely (verified: it 404s in the production build but "works" in
+// `astro dev`, where no bundling occurs). `npm run build`/`npm run dev` are
+// always invoked from the repo root, so process.cwd() is the stable anchor.
+import { existsSync, readFileSync } from 'node:fs';
+import { loadGithubMeta, formatSyncFlourish } from '../lib/github-meta';
+
+const dataDir = `${process.cwd()}/src/data`;
+const generatedPath = `${dataDir}/github-meta.json`;
+const seedPath = `${dataDir}/github-meta.seed.json`;
+
+let syncFlourish = '';
+try {
+  const meta = loadGithubMeta(generatedPath, seedPath, existsSync, readFileSync);
+  syncFlourish = formatSyncFlourish(meta);
+} catch {
+  // Even the seed is unreadable for some reason — the flourish is decorative,
+  // not load-bearing, so omit it rather than fail the build.
+  syncFlourish = '';
 }
 
-const { variant = 'subpage' } = Astro.props;
-const text = variant === 'home'
-  ? '© 2026 Korab Eland. Built as an evolving portfolio and learning record.'
-  : '© 2026 Korab Eland. Built with Claude Code.';
+const text = '© 2026 Korab Eland. Built as an evolving portfolio and learning record.';
 ---
 <footer>
     <div class="container">
         <p>{text}</p>
+        {syncFlourish && (
+            <p class="sync-flourish">
+                {/* Decorative "live" dot (DESIGN.md Color: "Use amber --accent
+                    for the live/synced signal dot"). Kept as a non-text glyph,
+                    not the text color itself: computed contrast of --accent
+                    (#d97706) directly on light-mode --bg (#faf7f2) is ~2.98:1,
+                    which fails WCAG AA even for large text (needs 3:1) — see
+                    the same note in ProjectRow.astro. --text-muted on --bg
+                    passes AA comfortably in both modes, so the flourish text
+                    stays --text-muted and only the dot carries --accent. */}
+                <span class="sync-flourish__dot" aria-hidden="true"></span>
+                {syncFlourish}
+            </p>
+        )}
     </div>
 </footer>
+
+<style>
+    .sync-flourish {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: var(--space-xs);
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .sync-flourish__dot {
+        flex-shrink: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--accent);
+    }
+</style>

@@ -1,23 +1,15 @@
 ---
-interface Props {
-  variant?: 'home' | 'subpage';
-}
-
-const { variant = 'subpage' } = Astro.props;
-const isHome = variant === 'home';
-const logoText = isHome ? 'Korab Eland' : "Korab's AI-Assisted Portfolio";
-const prefix = isHome ? '' : '/';
+// Single-page hub: no subpages remain after U4's deletions, so there is only
+// one nav variant (anchor links into the current page).
 ---
 <header>
     <nav>
         <div class="nav-container">
-            <div class="logo">{logoText}</div>
+            <div class="logo">Korab Eland</div>
             <ul class="nav-links">
-                <li><a href={`${prefix}#about`}>About</a></li>
-                {isHome && <li><a href="#framework">How I Work</a></li>}
-                <li><a href={isHome ? '#projects' : '/#projects'}>Featured Work</a></li>
-                <li><a href={isHome ? '#notes' : '/#notes'}>Field Notes</a></li>
-                <li><a href={isHome ? '#contact' : '/#contact'}>Contact</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Featured Work</a></li>
+                <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
     </nav>
