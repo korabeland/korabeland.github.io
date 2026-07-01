@@ -27,6 +27,7 @@
     "@rollup/rollup-darwin-arm64": "^4.60.2"
   },
   "devDependencies": {
+    "happy-dom": "^20.10.6",
     "js-yaml": "^4.1.1",
     "vitest": "^4.1.9",
     "zod": "^3.25.76"
