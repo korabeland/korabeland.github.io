@@ -1,7 +1,10 @@
 #!/usr/bin/env tsx
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readProjectFiles } from '../src/lib/project-files';
+import { githubApiHeaders } from '../src/lib/github-api';
+import type { RepoMeta, GithubMetaFile } from '../src/lib/github-meta';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
@@ -16,42 +19,13 @@ const seedFile = resolve(outDir, 'github-meta.seed.json');
 const LIVE_REPO_SLUGS = ['perian', 'perian-jobsearch', 'fantasy-baseball-drafter'];
 const GITHUB_OWNER = 'korabeland';
 
-interface RepoMeta {
-  language: string | null;
-  last_push: string | null;
-}
-
-interface GithubMetaFile {
-  repos: Record<string, RepoMeta>;
-  live_project_count: number;
-  freshest_push: string | null;
-}
-
-/** Splits a project markdown file into its frontmatter object (as raw lines) and body. */
-function parseFrontmatterStatus(raw: string): string | undefined {
-  const match = /^---\n([\s\S]*?)\n---/.exec(raw);
-  if (!match) return undefined;
-  const statusLine = match[1].split('\n').find((line) => line.trim().startsWith('status:'));
-  if (!statusLine) return undefined;
-  return statusLine.split(':')[1]?.trim().replace(/^["']|["']$/g, '');
-}
-
 /**
  * Counts live projects directly from the content collection on disk. This is
  * the same number U3's `NN / total` index displays — never fetched from
  * GitHub or invented separately.
  */
 export function countLiveProjects(dir: string = projectsDir): number {
-  if (!existsSync(dir)) return 0;
-  const files = readdirSync(dir).filter((f) => f.endsWith('.md'));
-  let count = 0;
-  for (const file of files) {
-    const raw = readFileSync(resolve(dir, file), 'utf8');
-    const status = parseFrontmatterStatus(raw);
-    // Schema default is 'live' when status is omitted.
-    if (status === undefined || status === 'live') count += 1;
-  }
-  return count;
+  return readProjectFiles(dir).filter((entry) => (entry.data.status ?? 'live') === 'live').length;
 }
 
 /** Fetches `{ language, pushed_at }` for one repo. Returns null on any failure. */
@@ -60,12 +34,8 @@ export async function fetchRepoMeta(
   fetchImpl: typeof fetch = fetch,
 ): Promise<RepoMeta | null> {
   try {
-    const headers: Record<string, string> = { Accept: 'application/vnd.github+json' };
-    const token = process.env.GITHUB_TOKEN;
-    if (token) headers.Authorization = `Bearer ${token}`;
-
     const response = await fetchImpl(`https://api.github.com/repos/${GITHUB_OWNER}/${slug}`, {
-      headers,
+      headers: githubApiHeaders(),
     });
 
     if (!response.ok) return null;
@@ -116,8 +86,13 @@ export async function buildGithubMeta(
   const seed = readSeed();
   const repos: Record<string, RepoMeta> = {};
 
-  for (const slug of LIVE_REPO_SLUGS) {
-    const fetched = await fetchRepoMeta(slug, fetchImpl);
+  // Independent per-repo fetches — no data dependency between them, so run
+  // concurrently rather than serializing 3x the network latency.
+  const fetchedBySlug = await Promise.all(
+    LIVE_REPO_SLUGS.map(async (slug) => [slug, await fetchRepoMeta(slug, fetchImpl)] as const),
+  );
+
+  for (const [slug, fetched] of fetchedBySlug) {
     const seeded = seed.repos[slug];
 
     if (fetched) {

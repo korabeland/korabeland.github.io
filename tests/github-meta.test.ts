@@ -68,4 +68,14 @@ describe('loadGithubMeta', () => {
 
     expect(meta).toEqual(seedMeta);
   });
+
+  it('falls back to the seed file when the generated file exists but is malformed', () => {
+    const exists = (path: string) => path === '/data/github-meta.json';
+    const readFile = (path: string) =>
+      path === '/data/github-meta.json' ? '{ not valid json' : JSON.stringify(seedMeta);
+
+    const meta = loadGithubMeta('/data/github-meta.json', '/data/github-meta.seed.json', exists, readFile);
+
+    expect(meta).toEqual(seedMeta);
+  });
 });

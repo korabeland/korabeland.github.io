@@ -34,6 +34,12 @@ export interface ExistsSync {
  * Loads github-meta.json if present, otherwise falls back to the committed
  * seed. A dynamic fs read (not a static ES `import`) so a missing generated
  * file never hard-fails the build — the seed always exists as the floor.
+ *
+ * The generated-file read is itself wrapped in a try/catch (not left to the
+ * caller): a present-but-malformed generated file — e.g. an interrupted
+ * write — should degrade to the seed the same way a missing one does, and
+ * that safety needs to live in this function so any future caller gets it
+ * for free rather than having to remember to wrap the call themselves.
  */
 export function loadGithubMeta(
   generatedPath: string,
@@ -41,8 +47,14 @@ export function loadGithubMeta(
   exists: ExistsSync,
   readFile: ReadFileSync
 ): GithubMetaFile {
-  const path = exists(generatedPath) ? generatedPath : seedPath;
-  return JSON.parse(readFile(path, 'utf8'));
+  if (exists(generatedPath)) {
+    try {
+      return JSON.parse(readFile(generatedPath, 'utf8'));
+    } catch {
+      // Fall through to the seed below.
+    }
+  }
+  return JSON.parse(readFile(seedPath, 'utf8'));
 }
 
 /**

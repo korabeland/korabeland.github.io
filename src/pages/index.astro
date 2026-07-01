@@ -73,6 +73,10 @@ import ProjectList from '../components/ProjectList.astro';
         max-width: 430px;
     }
 
+    /* --accent-hover, not --accent: the base `a { color: var(--accent) }`
+       rule in global.css fails WCAG AA as resting link-text color in light
+       mode (~2.98:1 against --bg, needs 3:1) — see the same note in
+       ProjectRow.astro and Footer.astro. --accent-hover clears AA (4.70:1). */
     .about-copy a {
         color: var(--accent-hover);
         text-decoration: underline;
@@ -89,6 +93,9 @@ import ProjectList from '../components/ProjectList.astro';
         font-size: 0.85rem;
     }
 
+    /* --text at rest, not --accent, for the same reason as .about-copy a
+       above — resting --accent text fails AA in light mode. --accent-hover
+       is safe to use on :hover below. */
     .contact-row a {
         color: var(--text);
         text-decoration: none;

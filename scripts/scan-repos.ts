@@ -13,10 +13,12 @@
 // `Add project card: {slug}` (see PR_TITLE_PREFIX below). The workflow that
 // opens PRs must use this exact title format.
 
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { readProjectFiles } from '../src/lib/project-files';
+import { githubApiHeaders } from '../src/lib/github-api';
 
 const REPO_OWNER = 'korabeland';
 const SITE_REPO_NAMES = new Set(['korabeland.github.io', 'korabeland.com']);
@@ -126,23 +128,11 @@ export function toCardFile(candidate: RepoCandidate): string {
 /** Reads the slugs of every entry currently in src/content/projects/, regardless of status. */
 export function readExistingSlugs(projectsDir: string): Set<string> {
   const slugs = new Set<string>();
-  let files: string[];
-  try {
-    files = readdirSync(projectsDir);
-  } catch {
-    return slugs;
-  }
-  for (const file of files) {
-    if (!file.endsWith('.md')) continue;
-    const raw = readFileSync(path.join(projectsDir, file), 'utf-8');
-    const match = /^slug:\s*"?([^"\n]+)"?\s*$/m.exec(raw);
-    if (match) {
-      slugs.add(match[1].trim());
-    } else {
-      // Fall back to the filename stem if slug isn't parseable — still
-      // counts as "present" so we never double-propose.
-      slugs.add(file.replace(/\.md$/, ''));
-    }
+  for (const entry of readProjectFiles(projectsDir)) {
+    const slug = entry.data.slug;
+    // Fall back to the filename stem if slug isn't a string — still counts
+    // as "present" so we never double-propose.
+    slugs.add(typeof slug === 'string' && slug.trim() ? slug.trim() : entry.file.replace(/\.md$/, ''));
   }
   return slugs;
 }
@@ -172,10 +162,7 @@ export function readOpenWatchdogPrSlugs(): Set<string> {
 /** Fetches all public, non-fork-filtered repo listing for REPO_OWNER via the GitHub REST API. */
 export async function fetchPublicRepos(): Promise<GitHubRepo[]> {
   const repos: GitHubRepo[] = [];
-  const headers: Record<string, string> = { Accept: 'application/vnd.github+json' };
-  if (process.env.GITHUB_TOKEN) {
-    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-  }
+  const headers = githubApiHeaders();
   let page = 1;
   for (;;) {
     const res = await fetch(

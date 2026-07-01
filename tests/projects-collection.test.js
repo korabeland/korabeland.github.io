@@ -1,9 +1,8 @@
-import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import yaml from 'js-yaml';
 import { z } from 'zod';
 import { describe, expect, it } from 'vitest';
+import { readProjectFiles } from '../src/lib/project-files';
 
 // Mirrors the `projects` collection schema defined in `src/content.config.ts`.
 // Duplicated here (rather than imported) because `content.config.ts` imports
@@ -24,23 +23,8 @@ const projectSchema = z.object({
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectsDir = path.join(__dirname, '..', 'src', 'content', 'projects');
 
-/** Splits a markdown file into its frontmatter object and body string. */
-function parseFrontmatter(raw) {
-  const match = /^---\n([\s\S]*?)\n---\n?([\s\S]*)$/.exec(raw);
-  if (!match) {
-    throw new Error('No frontmatter block found');
-  }
-  const [, frontmatterYaml, body] = match;
-  return { data: yaml.load(frontmatterYaml), body };
-}
-
 function readAllProjectEntries() {
-  return readdirSync(projectsDir)
-    .filter((file) => file.endsWith('.md'))
-    .map((file) => {
-      const raw = readFileSync(path.join(projectsDir, file), 'utf-8');
-      return { file, ...parseFrontmatter(raw) };
-    });
+  return readProjectFiles(projectsDir);
 }
 
 const validFixture = {
