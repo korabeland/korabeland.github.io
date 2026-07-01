@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "astro sync && tsc --noEmit"
   },
   "repository": {
     "type": "git",
