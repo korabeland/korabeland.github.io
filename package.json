@@ -4,10 +4,14 @@
   "description": "Korab Eland's portfolio site — korabeland.github.io",
   "type": "module",
   "scripts": {
+    "predev": "tsx scripts/enrich-projects.ts",
     "dev": "astro dev",
+    "prebuild": "tsx scripts/enrich-projects.ts",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -24,5 +28,13 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-darwin-arm64": "^4.60.2"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "happy-dom": "^20.10.6",
+    "js-yaml": "^4.1.1",
+    "tsx": "^4.21.0",
+    "vitest": "^4.1.9",
+    "zod": "^3.25.76"
   }
 }

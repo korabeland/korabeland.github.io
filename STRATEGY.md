@@ -6,11 +6,11 @@ This document covers strategy specific to the portfolio site (korabeland.github.
 
 ## Purpose
 
-Deep-dive proof of work — case studies, decision frameworks, project detail. This is "The Workshop" in the hub-and-spoke architecture.
+A curated, **self-updating index of public work** — proof Korab builds, not a sales pitch. This is "The Workshop" in the hub-and-spoke architecture: korabeland.com carries personhood and writing, this site is the proof-of-building layer. Cards link straight to the repo; there are no on-site case studies or deep dives — that depth lives in repo READMEs, revisited on-site only if a specific project ever warrants it.
 
 ## Audience
 
-Hiring managers, technical peers, and collaborators who want to see how Korab thinks and builds.
+Hiring managers, technical peers, and collaborators — for CX / product / AI-strategy roles specifically, not positioned as a pure software-engineer portfolio.
 
 ## Tone
 
@@ -20,41 +20,24 @@ Portfolio-first and personality-led, not sales-heavy. Competent, evidence-backed
 
 ## Content Priorities
 
-1. Highlight decision-making framework before feature detail
-2. Lead with business impact metrics in case studies
-3. Keep prompt library as supporting evidence, not the core narrative
-4. Show real work — process, tradeoffs, and outcomes
+1. Curation over completeness — the hub stays a deliberately-chosen set, never a full repo dump
+2. Each card earns its place with a one-line voice-crafted hook, not a lifted GitHub description
+3. Currency without manual upkeep — the watchdog (see `CLAUDE.md`) proposes new cards as repos go public; Korab approves, edits, or skips
+4. Link out, don't retell — the repo README is the source of truth for project depth
 
 ## Conversion Design
 
 - **Primary CTA:** Email me
-- **Secondary CTA:** View case studies / read project details
+- **Secondary CTA:** Click through to a repo
 - **Tertiary CTA:** Download resume
 - **Cross-link:** Route visitors to korabeland.com for the full picture
 
 ---
 
-## Migration Plan
+## Architecture (settled)
 
-**Current state:** Static HTML/CSS, no build process, deployed to GitHub Pages via `docs/` folder.
-
-**Target state:** Astro site with MDX content, component library, and structured frontmatter for agent-writability.
-
-### Migration Steps
-1. Clone repo from GitHub into parent folder as `portfolio-site/`
-2. Initialize Astro project alongside existing `docs/`
-3. Migrate content page by page — preserve URLs and analytics
-4. Update deployment pipeline for Astro build output
-5. Archive Drive copy once clone is verified working
-
-### What Stays the Same
-- GitHub Pages deployment at korabeland.github.io
-- GA4 analytics (measurement ID: G-LVJ7FH16ZK)
-- Accessibility standards (WCAG AA)
-- Project case study structure
-
-### What Changes
-- Static HTML → Astro components + MDX content
-- Manual project pages → templated from frontmatter
-- No build process → Astro build pipeline
-- CSS-only → potential for component-scoped styles
+Astro 5, static output, single page, deployed to GitHub Pages via GitHub Actions on push to
+`main`. Projects are a schema-validated content collection (`src/content/projects/`), not
+hand-authored pages — see `CLAUDE.md`'s "Project cards" and "Watchdog" sections for the
+current model. The 2026-03 static-HTML → Astro migration and the 2026-06 grayscale →
+warm-terminal / case-studies → hub rebuild are both complete; there is no pending migration.

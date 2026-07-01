@@ -1,0 +1,40 @@
+---
+// Dev-only preview route for auditing ProjectList/ProjectRow against
+// DESIGN.md (type scale, mono indices, hover, divider rhythm) in isolation,
+// before wiring into index.astro.
+//
+// Exclusion mechanism: this is a static-output site (no SSR), so
+// import.meta.env.PROD route guards aren't viable. Astro's file-based router
+// treats any path segment prefixed with `_` (like this `_dev/` directory) as
+// private and never generates a route for it in either `astro dev` or
+// `astro build` — verified empirically by running `astro build` and
+// confirming dist/_dev/ does not exist. No extra build hook is needed; the
+// underscore prefix is the whole mechanism (see the implementation report
+// for the full verification trail; this is a build/runtime property, not
+// something tests/project-list.test.ts — which covers the pure list-shaping
+// logic in src/lib/projects.ts — asserts directly).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectList from '../../components/ProjectList.astro';
+---
+<BaseLayout
+  title="Dev preview: ProjectList"
+  description="Internal dev-only preview route. Not part of the deployed site."
+>
+    <section class="dev-preview">
+        <p class="kicker">Dev-only preview — excluded from dist/ at build time</p>
+        <h1>ProjectList</h1>
+        <ProjectList />
+    </section>
+</BaseLayout>
+
+<style>
+    .dev-preview {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: var(--space-xl) var(--space-lg);
+    }
+
+    .dev-preview .kicker {
+        margin-bottom: var(--space-md);
+    }
+</style>

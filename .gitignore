@@ -5,6 +5,10 @@
 node_modules/
 .astro/
 
+# GitHub metadata: generated per-build by scripts/enrich-projects.ts.
+# Seed (github-meta.seed.json) is committed as the offline/rate-limit fallback.
+src/data/github-meta.json
+
 # Private workspace roots (internal tooling, source materials, raw projects)
 # Leading / anchors to repo root so docs/projects/ is NOT ignored on
 # case-insensitive filesystems (Windows).
@@ -12,6 +16,9 @@ node_modules/
 /Projects/
 /Prompt Library/
 /Claude Skills/
+
+# Per-subagent worktrees created during parallel ce-work dispatch
+.claude/worktrees/
 
 # Sensitive/personal root files
 Korab_Eland_Resume.docx

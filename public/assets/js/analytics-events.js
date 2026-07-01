@@ -85,11 +85,6 @@
         }
     }
 
-    function getSlugFromPath(pagePath) {
-        var match = pagePath.match(/\/([^/]+)\.html$/i);
-        return match ? match[1] : "unknown";
-    }
-
     function inferLocation(el) {
         if (el.closest("header")) {
             return "header";
@@ -259,81 +254,6 @@
         window.setTimeout(navigate, 300);
     }
 
-    function trackProjectSession() {
-        if (pageType !== "project") {
-            return;
-        }
-
-        var slug = getSlugFromPath(path);
-        var viewedProjects = [];
-        var sessionKey = "portfolio_projects_viewed";
-        var firedKey = "portfolio_multi_project_fired";
-
-        try {
-            var raw = sessionStorage.getItem(sessionKey);
-            viewedProjects = raw ? JSON.parse(raw) : [];
-        } catch (_err) {
-            viewedProjects = [];
-        }
-
-        if (!Array.isArray(viewedProjects)) {
-            viewedProjects = [];
-        }
-
-        if (viewedProjects.indexOf(slug) === -1) {
-            viewedProjects.push(slug);
-            sessionStorage.setItem(sessionKey, JSON.stringify(viewedProjects));
-        }
-
-        if (viewedProjects.length >= 2 && !sessionStorage.getItem(firedKey)) {
-            fireEvent("multi_project_session", {
-                project_count: viewedProjects.length,
-                project_slug: slug
-            });
-            sessionStorage.setItem(firedKey, "1");
-        }
-    }
-
-    function trackCaseStudyReadComplete() {
-        if (pageType !== "project") {
-            return;
-        }
-
-        var slug = getSlugFromPath(path);
-        var hitTime = false;
-        var hitScroll = false;
-        var fired = false;
-
-        function maybeFire() {
-            if (!fired && hitTime && hitScroll) {
-                fired = true;
-                fireEvent("case_study_read_complete", {
-                    project_slug: slug,
-                    read_threshold: "75pct_90s"
-                });
-                window.removeEventListener("scroll", onScroll);
-            }
-        }
-
-        function onScroll() {
-            var doc = document.documentElement;
-            var maxHeight = Math.max(doc.scrollHeight, 1);
-            var ratio = (window.scrollY + window.innerHeight) / maxHeight;
-            if (ratio >= 0.75) {
-                hitScroll = true;
-                maybeFire();
-            }
-        }
-
-        window.setTimeout(function () {
-            hitTime = true;
-            maybeFire();
-        }, 90000);
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-        onScroll();
-    }
-
     function trackLinkClicks() {
         document.addEventListener(
             "click",
@@ -350,7 +270,6 @@
 
                 var text = safeText(link.textContent);
                 var ctaLocation = inferLocation(link);
-                var hasDownloadAttr = link.hasAttribute("download");
                 var resolvedUrl;
 
                 try {
@@ -398,23 +317,6 @@
                         file_type: fileExt
                     }, event, link, href, resolvedUrl);
                     return;
-                }
-
-                if (/\/projects\/[^/]+\.html$/i.test(pathname)) {
-                    trackClickAndNavigate("project_card_click", {
-                        cta_location: ctaLocation,
-                        project_slug: getSlugFromPath(pathname),
-                        link_text: text
-                    }, event, link, href, resolvedUrl);
-                    return;
-                }
-
-                if (hasDownloadAttr || /^(pdf|doc|docx|xls|xlsx|ppt|pptx|csv|md|txt)$/i.test(fileExt)) {
-                    trackClickAndNavigate("artifact_open", {
-                        cta_location: ctaLocation,
-                        artifact_name: fileName || text || "unknown",
-                        artifact_type: fileExt || "download"
-                    }, event, link, href, resolvedUrl);
                 }
             },
             true
@@ -474,8 +376,6 @@
     }
 
     ensureBaseConfig();
-    trackProjectSession();
-    trackCaseStudyReadComplete();
     trackLinkClicks();
     enableDebugMode();
     emitDebugHeartbeat();
