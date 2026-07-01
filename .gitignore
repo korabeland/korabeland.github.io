@@ -13,6 +13,9 @@ node_modules/
 /Prompt Library/
 /Claude Skills/
 
+# Per-subagent worktrees created during parallel ce-work dispatch
+.claude/worktrees/
+
 # Sensitive/personal root files
 Korab_Eland_Resume.docx
 code_review_log.md
