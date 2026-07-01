@@ -1,0 +1,162 @@
+---
+// Single row in the editorial project list (DESIGN.md "Layout: Projects").
+// Renders only author-curated fields: name, hook, tech, repo_url. Deliberately
+// does NOT render language/last_push per row — those are build-time-enriched
+// fields reserved for a footer "synced from github" aggregate (U4/U5), not a
+// per-row concern for this unit.
+interface Props {
+  index: string; // pre-formatted "NN / total" mono index
+  name: string;
+  hook: string;
+  tech: string[];
+  repo_url: string;
+}
+
+const { index, name, hook, tech, repo_url } = Astro.props;
+---
+<article class="project-row">
+    <span class="project-row__index">{index}</span>
+    <div class="project-row__content">
+        <h2 class="project-row__name">{name}</h2>
+        <p class="project-row__hook">{hook}</p>
+        {tech.length > 0 && (
+            <ul class="project-row__tech">
+                {tech.map((item) => <li>{item}</li>)}
+            </ul>
+        )}
+    </div>
+    <a
+        class="project-row__link"
+        href={repo_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View ${name} on GitHub (opens in a new tab)`}
+    >
+        <span class="project-row__link-arrow" aria-hidden="true">&rarr;</span>
+        <span class="project-row__link-label">github</span>
+    </a>
+</article>
+
+<style>
+    /* Hairline divider between rows (DESIGN.md --border token). Each row owns
+       its own top border so the divider works regardless of list length,
+       including the single-row case (no separate wrapper rule needed). */
+    .project-row {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-md);
+        padding: var(--row-padding-y) 0;
+        border-top: 1px solid var(--border);
+        transition: background-color var(--motion-duration) var(--motion-easing),
+            padding var(--motion-duration) var(--motion-easing);
+    }
+
+    /* Row hover (DESIGN.md Motion): background shifts to --bg-surface, row
+       gains ~10px horizontal padding, arrow nudges right 3px. 150ms ease,
+       respecting prefers-reduced-motion via the global blanket rule in
+       global.css (transition-duration: 0.01ms !important). */
+    .project-row:hover,
+    .project-row:focus-within {
+        background-color: var(--bg-surface);
+        padding-left: var(--row-padding-x-hover);
+        padding-right: var(--row-padding-x-hover);
+    }
+
+    .project-row__index {
+        flex-shrink: 0;
+        width: 4.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--text-muted);
+    }
+
+    .project-row__content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .project-row__name {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 3.5vw, 1.875rem);
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        font-weight: 500;
+        color: var(--text);
+        margin: 0 0 4px;
+    }
+
+    .project-row__hook {
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--text-muted);
+        margin: 0 0 var(--space-xs);
+        max-width: 60ch;
+    }
+
+    .project-row__tech {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    .project-row__link {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        /* Resting state deliberately uses --text, not --accent: computed
+           contrast of --accent (#d97706) directly on light-mode --bg
+           (#faf7f2) is ~2.98:1, which fails WCAG AA even for large text
+           (needs 3:1). --text on --bg passes AA comfortably in both modes.
+           The arrow glyph below carries --accent as a decorative (non-text)
+           accent instead; on hover the row's background becomes
+           --bg-surface, where --accent-hover clears AA, so the full link
+           can safely take the accent color there. */
+        color: var(--text);
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .project-row__link-arrow {
+        color: var(--accent);
+        transition: transform var(--motion-duration) var(--motion-easing);
+    }
+
+    .project-row:hover .project-row__link,
+    .project-row:focus-within .project-row__link {
+        color: var(--accent-hover);
+    }
+
+    .project-row:hover .project-row__link-arrow,
+    .project-row:focus-within .project-row__link-arrow {
+        transform: translateX(3px);
+    }
+
+    /* Responsive (DESIGN.md breakpoints): index stacks above name at <640px. */
+    @media (max-width: 640px) {
+        .project-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-xs);
+        }
+
+        .project-row__index {
+            width: auto;
+        }
+
+        .project-row__link {
+            align-self: flex-start;
+        }
+    }
+</style>

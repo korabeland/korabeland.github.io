@@ -1,0 +1,40 @@
+---
+// Numbered editorial project list (DESIGN.md "Layout: Projects"). Filters to
+// status === 'live' and sorts per the resolved semantic in src/lib/projects.ts,
+// then renders one ProjectRow per entry with a "NN / total" mono index.
+import { getCollection } from 'astro:content';
+import ProjectRow from './ProjectRow.astro';
+import { sortLiveProjects, formatIndex } from '../lib/projects';
+
+const allProjects = await getCollection('projects');
+const liveProjects = sortLiveProjects(allProjects.map((entry) => entry.data));
+const total = liveProjects.length;
+---
+<div class="project-list">
+    {total === 0 ? (
+        <p class="project-list__empty">More projects coming soon.</p>
+    ) : (
+        liveProjects.map((project, i) => (
+            <ProjectRow
+                index={formatIndex(i + 1, total)}
+                name={project.name}
+                hook={project.hook}
+                tech={project.tech}
+                repo_url={project.repo_url}
+            />
+        ))
+    )}
+</div>
+
+<style>
+    .project-list {
+        max-width: var(--max-width);
+    }
+
+    .project-list__empty {
+        padding: var(--row-padding-y) 0;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-family: var(--font-body);
+    }
+</style>
