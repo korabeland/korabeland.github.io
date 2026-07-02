@@ -4,17 +4,22 @@
 // content collection via ProjectList (filters status === 'live', sorts per
 // src/lib/projects.ts). Real contact URLs sourced from the pre-rebuild
 // index.astro (git show f46b07e:src/pages/index.astro) and Footer.astro.
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectList from '../components/ProjectList.astro';
+import korabPhoto from '../assets/korab.png';
 ---
 <BaseLayout
   title="Korab Eland | Project Hub"
   description="A curated index of what Korab Eland builds — proof of building with AI, for CX, PM, and AI-strategy audiences."
 >
     <section id="hero" class="hero">
-        <p class="kicker">Korab Eland &mdash; builds with AI</p>
-        <h1>Proof, not a pitch.</h1>
-        <p class="hero-subtitle">A curated index of what I've actually shipped &mdash; each one links straight to the repo.</p>
+        <div class="hero-text">
+            <p class="kicker">Korab Eland &mdash; builds with AI</p>
+            <h1>Ambiguous problems, working systems.</h1>
+            <p class="hero-subtitle">A curated index of what I've actually shipped &mdash; each one links straight to the repo.</p>
+        </div>
+        <Image src={korabPhoto} alt="Korab Eland" class="hero-photo" width={220} height={220} />
     </section>
 
     <section id="projects" class="section">
@@ -47,9 +52,16 @@ import ProjectList from '../components/ProjectList.astro';
 
 <style>
     .hero {
-        max-width: 430px;
+        max-width: var(--max-width);
         padding: var(--space-2xl) var(--space-lg) var(--space-xl);
         margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-xl);
+    }
+
+    .hero-text {
+        max-width: 430px;
     }
 
     .hero h1 {
@@ -61,6 +73,17 @@ import ProjectList from '../components/ProjectList.astro';
         font-size: 1rem;
         line-height: 1.6;
         margin-bottom: 0;
+    }
+
+    /* Border radius: 0, no shadow/glow (DESIGN.md Decoration) — a hairline
+       border is the only treatment, matching the divider/border-bottom
+       language used elsewhere (ProjectRow, Header). */
+    .hero-photo {
+        flex-shrink: 0;
+        width: 220px;
+        height: 220px;
+        object-fit: cover;
+        border: 1px solid var(--border);
     }
 
     /* DESIGN.md Spacing: "Section padding: 96-128px vertical" -> --space-2xl
@@ -113,6 +136,14 @@ import ProjectList from '../components/ProjectList.astro';
     @media (max-width: 640px) {
         .hero {
             padding: var(--space-xl) var(--space-lg);
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-lg);
+        }
+
+        .hero-photo {
+            width: 160px;
+            height: 160px;
         }
     }
 </style>
