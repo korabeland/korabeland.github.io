@@ -57,12 +57,12 @@ const { class: className } = Astro.props;
     transform: rotate(-90deg);
   }
 
-  [data-theme='light'] .theme-toggle__icon--sun {
+  :global([data-theme='light']) .theme-toggle__icon--sun {
     opacity: 0;
     transform: rotate(90deg);
   }
 
-  [data-theme='light'] .theme-toggle__icon--moon {
+  :global([data-theme='light']) .theme-toggle__icon--moon {
     opacity: 1;
     transform: rotate(0deg);
   }
