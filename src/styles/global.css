@@ -137,7 +137,9 @@ body {
     transform: translateY(0);
     transition:
         opacity 350ms var(--ease-out),
-        transform 350ms var(--ease-out);
+        transform 350ms var(--ease-out),
+        background-color var(--motion-duration) var(--motion-easing),
+        padding var(--motion-duration) var(--motion-easing);
 }
 
 /* ===== PAPER / SCREEN-PRINT GRAIN OVERLAY =====
