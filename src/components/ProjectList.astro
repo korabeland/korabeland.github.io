@@ -29,6 +29,33 @@ const total = liveProjects.length;
     )}
 </div>
 
+<script>
+    // Scroll reveal for project rows: subtle, once-only, and JS-gated (the
+    // `js` class) so content is fully visible when JS is disabled. Rows that
+    // are already in view on load reveal immediately.
+    document.documentElement.classList.add('js');
+
+    const rows = document.querySelectorAll('.project-row');
+    rows.forEach((row) => row.classList.add('reveal'));
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.setAttribute('data-visible', '');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.15 }
+        );
+        rows.forEach((row) => observer.observe(row));
+    } else {
+        rows.forEach((row) => row.setAttribute('data-visible', ''));
+    }
+</script>
+
 <style>
     .project-list {
         max-width: var(--max-width);

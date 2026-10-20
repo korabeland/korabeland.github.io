@@ -50,6 +50,11 @@
     --motion-duration: 150ms;
     --motion-easing: ease;
 
+    /* Strong ease-out for deliberate motion (entrances, reveals). Per the
+       animation skill vocabulary: built-in easings are too weak for motion
+       the user deliberately watches; hover/color transitions keep `ease`. */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
     /* Radius: sharp content, small controls only */
     --radius-control: 8px;
 
@@ -96,6 +101,45 @@ body {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
     }
+}
+
+/* ===== ENTRANCES & REVEALS (animation skill workflow) =====
+ * Hero entrance: CSS animation (not JS) so it stays smooth while the page
+ * is still loading — animations run off the main thread. Stagger is
+ * decorative and never blocks interaction (70ms steps, `both` fill mode).
+ */
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-enter {
+    animation: rise-in 450ms var(--ease-out) both;
+    animation-delay: var(--enter-delay, 0ms);
+}
+
+/* Scroll reveal: applied via JS only (the `js` class), so no-JS visitors
+ * still see all content. Fires once per element — re-animating on every
+ * scroll-by would fight the reader. transform/opacity only (GPU). */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+.js .reveal[data-visible] {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 350ms var(--ease-out),
+        transform 350ms var(--ease-out),
+        background-color var(--motion-duration) var(--motion-easing),
+        padding var(--motion-duration) var(--motion-easing);
 }
 
 /* ===== PAPER / SCREEN-PRINT GRAIN OVERLAY =====
@@ -200,11 +244,15 @@ a:hover {
     align-items: center;
 }
 
-/* ===== SKIP LINK (ACCESSIBILITY) ===== */
+/* ===== SKIP LINK (ACCESSIBILITY) =====
+ * Slides in with transform (GPU), not `top` (layout). Rare/first-time
+ * frequency tier, so a 200ms bridge on focus is appropriate. */
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: 0;
     left: 0;
+    transform: translateY(-110%);
+    transition: transform 200ms var(--ease-out);
     background-color: var(--accent);
     color: var(--bg);
     padding: var(--space-xs);
@@ -214,7 +262,7 @@ a:hover {
 }
 
 .skip-link:focus {
-    top: 0;
+    transform: translateY(0);
 }
 
 /* ===== NAVIGATION ===== */
@@ -269,12 +317,19 @@ header {
     color: var(--text);
     cursor: pointer;
     transition: background-color var(--motion-duration) var(--motion-easing),
-        border-color var(--motion-duration) var(--motion-easing);
+        border-color var(--motion-duration) var(--motion-easing),
+        transform 160ms var(--ease-out);
 }
 
 .theme-toggle:hover {
     background-color: var(--bg-surface);
     border-color: var(--accent);
+}
+
+/* Press feedback: near-imperceptible by design (tens/day frequency tier) —
+   confirms the press without slowing it down. */
+.theme-toggle:active {
+    transform: scale(0.97);
 }
 
 /* Fixed placement used when BaseLayout mounts the toggle outside the nav

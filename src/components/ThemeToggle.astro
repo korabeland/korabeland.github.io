@@ -15,6 +15,7 @@ const { class: className } = Astro.props;
   class:list={['theme-toggle', className]}
   aria-label="Toggle color theme"
 >
+  <span class="theme-toggle__icons" aria-hidden="true">
   <svg class="theme-toggle__icon theme-toggle__icon--sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <circle cx="12" cy="12" r="4"></circle>
     <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
@@ -22,24 +23,48 @@ const { class: className } = Astro.props;
   <svg class="theme-toggle__icon theme-toggle__icon--moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
   </svg>
+  </span>
 </button>
 
 <style>
+  /* Icon crossfade: the sun/moon swap is a state change (state indication),
+     so it gets a bridge instead of an instant display swap. Both icons stay
+     in the DOM, stacked; the outgoing one fades while rotating slightly.
+     200ms keeps it inside the UI budget. */
+  .theme-toggle__icons {
+    position: relative;
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+
   .theme-toggle__icon {
-    display: none;
+    position: absolute;
+    inset: 0;
+    transition:
+      opacity 200ms var(--ease-out),
+      transform 200ms var(--ease-out);
   }
 
   /* Show the icon for the mode you'd switch TO, not the current mode. */
   :root .theme-toggle__icon--sun {
-    display: block;
+    opacity: 1;
+    transform: rotate(0deg);
   }
 
-  [data-theme='light'] .theme-toggle__icon--sun {
-    display: none;
+  :root .theme-toggle__icon--moon {
+    opacity: 0;
+    transform: rotate(-90deg);
   }
 
-  [data-theme='light'] .theme-toggle__icon--moon {
-    display: block;
+  :global([data-theme='light']) .theme-toggle__icon--sun {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  :global([data-theme='light']) .theme-toggle__icon--moon {
+    opacity: 1;
+    transform: rotate(0deg);
   }
 </style>
 

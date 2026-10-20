@@ -117,9 +117,11 @@ korabeland.com's cool grays. No gradients, no drop shadows.
 ## Motion
 
 - **Approach:** intentional, restrained.
-- **Easing / duration:** 150ms ease on interactive elements (brand standard).
+- **Interactive easing / duration:** 150ms ease on interactive elements (brand standard).
+- **Deliberate motion:** `--ease-out` is `cubic-bezier(0.23, 1, 0.32, 1)`. The hero uses a 450ms CSS entrance with 70ms stagger steps. Project rows reveal once when they enter the viewport, using 350ms opacity and transform transitions. JavaScript gates the hidden state so content remains visible without JavaScript.
+- **Control feedback:** the theme toggle crossfades and rotates its sun/moon icons over 200ms, and scales to 0.97 while pressed over 160ms. The skip link slides into view with a 200ms transform transition when focused.
 - **Row hover:** background shifts to `--bg-surface`, row gains horizontal padding, the `→` arrow nudges right 3px.
-- Respect `prefers-reduced-motion`.
+- Respect `prefers-reduced-motion`; the global reduced-motion rule shortens animation and transition durations.
 
 ---
 
