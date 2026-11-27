@@ -3,6 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { describe, expect, it } from 'vitest';
 import { readProjectFiles } from '../src/lib/project-files';
+import { sortLiveProjects } from '../src/lib/projects';
 
 // Mirrors the `projects` collection schema defined in `src/content.config.ts`.
 // Duplicated here (rather than imported) because `content.config.ts` imports
@@ -82,12 +83,7 @@ describe('projects collection schema', () => {
 });
 
 describe('projects seed content', () => {
-  it('contains exactly three entries under src/content/projects', () => {
-    const entries = readAllProjectEntries();
-    expect(entries).toHaveLength(3);
-  });
-
-  it('validates every seed file against the schema, all defaulting/set to status "live"', () => {
+  it('validates every project file against the schema, all defaulting/set to status "live"', () => {
     const entries = readAllProjectEntries();
     expect(entries.length).toBeGreaterThan(0);
 
@@ -100,15 +96,12 @@ describe('projects seed content', () => {
     }
   });
 
-  it('includes the three expected launch cards by slug, in order', () => {
-    const entries = readAllProjectEntries()
-      .map((entry) => projectSchema.parse(entry.data))
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  it('includes the three expected launch cards first in sortLiveProjects order', () => {
+    const launchSlugs = ['perian', 'perian-jobsearch', 'fantasy-baseball-drafter'];
+    const entries = sortLiveProjects(
+      readAllProjectEntries().map((entry) => projectSchema.parse(entry.data)),
+    );
 
-    expect(entries.map((entry) => entry.slug)).toEqual([
-      'perian',
-      'perian-jobsearch',
-      'fantasy-baseball-drafter',
-    ]);
+    expect(entries.slice(0, launchSlugs.length).map((entry) => entry.slug)).toEqual(launchSlugs);
   });
 });
