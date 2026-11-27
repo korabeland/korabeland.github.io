@@ -3,6 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { describe, expect, it } from 'vitest';
 import { readProjectFiles } from '../src/lib/project-files';
+import { sortLiveProjects } from '../src/lib/projects';
 
 // Mirrors the `projects` collection schema defined in `src/content.config.ts`.
 // Duplicated here (rather than imported) because `content.config.ts` imports
@@ -82,12 +83,9 @@ describe('projects collection schema', () => {
 });
 
 describe('projects seed content', () => {
-  it('contains exactly three entries under src/content/projects', () => {
-    const entries = readAllProjectEntries();
-    expect(entries).toHaveLength(3);
-  });
+  const launchSlugs = ['perian', 'perian-jobsearch', 'fantasy-baseball-drafter'];
 
-  it('validates every seed file against the schema, all defaulting/set to status "live"', () => {
+  it('validates every project file against the schema with status "live" or "skipped"', () => {
     const entries = readAllProjectEntries();
     expect(entries.length).toBeGreaterThan(0);
 
@@ -95,20 +93,39 @@ describe('projects seed content', () => {
       const result = projectSchema.safeParse(entry.data);
       expect(result.success, `${entry.file} failed schema validation: ${JSON.stringify(result.error?.issues)}`).toBe(true);
       if (result.success) {
-        expect(result.data.status).toBe('live');
+        expect(['live', 'skipped']).toContain(result.data.status);
       }
     }
   });
 
-  it('includes the three expected launch cards by slug, in order', () => {
-    const entries = readAllProjectEntries()
-      .map((entry) => projectSchema.parse(entry.data))
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  it('includes the three expected launch cards first in sortLiveProjects order', () => {
+    const entries = sortLiveProjects(
+      readAllProjectEntries().map((entry) => projectSchema.parse(entry.data)),
+    );
 
-    expect(entries.map((entry) => entry.slug)).toEqual([
-      'perian',
-      'perian-jobsearch',
-      'fantasy-baseball-drafter',
+    expect(entries.slice(0, launchSlugs.length).map((entry) => entry.slug)).toEqual(launchSlugs);
+  });
+
+  it('accepts a skipped card and excludes it from the launch-cards-first check', () => {
+    const skippedResult = projectSchema.safeParse({
+      ...validFixture,
+      name: 'skipped-project',
+      slug: 'skipped-project',
+      repo_url: 'https://github.com/korabeland/skipped-project',
+      order: 0,
+      status: 'skipped',
+    });
+
+    expect(skippedResult.success).toBe(true);
+    if (!skippedResult.success) return;
+    expect(skippedResult.data.status).toBe('skipped');
+
+    const liveEntries = sortLiveProjects([
+      skippedResult.data,
+      ...readAllProjectEntries().map((entry) => projectSchema.parse(entry.data)),
     ]);
+
+    expect(liveEntries.map((entry) => entry.slug)).not.toContain('skipped-project');
+    expect(liveEntries.slice(0, launchSlugs.length).map((entry) => entry.slug)).toEqual(launchSlugs);
   });
 });
